@@ -132,9 +132,25 @@
 
 \section*{Main}\label{sec1}
 
-New assembly approaches based on long sequence reads of high accuracy are allowing us to assemble regions of genomes that were previously accessible only with specialized, labor-intensive approaches \cite{Nurk2021, Logsdon2021, Ebert2021}.
-Although understanding their relationships is critical for comparative genomics, these assemblies are not easy for existing tools to work with.
-&Many methods have difficulty working with the repetitive, previously-inaccessible regions that they include, and none that we are aware of can easily scale to the exascale compute required to directly compare hundreds of thousands of T2T assemblies to each other.
+New assembly approaches based on high-accuracy long sequence reads have made possible to assemble regions of the genomes that were previously inaccessible~\cite{Nurk2021, Logsdon2021, Ebert2021}.
+The study of all these high-quality assemblies has therefore become essential for a comprehensive understanding of the genetic variability of populations.
+Pangenomes are models able to fully represent collections of sequences~\cite{Eizenga2020}.
+A class of methods to represent pangenomes involves the sequence graphs, where similar orthologous regions between genomes collapse into a single representative sequence.
+Pangenome building is a difficult problem, and it has been approached by using alignment methods that were traditionally used for large multiple sequence alignments, such as partial order alignment (POA)\cite{Lee2002}.
+In particular, Minigraph~\cite{Li2020} applies a POA-based generalization of the Minimap2~\cite{Li2018} minimizer chaining algorithm to sequence directed acyclic graphs (DAGs).
+This produces a simple DAG, with a linear reference and a hierarchy of structural variation build out of it.
+This model has a critical limitation: wide structural and evolutionary-scale variation do not respect the simplistic linear and hierarchical model,
+rendering it inappropriate for representing large scale features in general pangenome graphs~\cite{Sekar2016, Hollox2008, Vollger2021}.
+Futhermore, to apply a minigraph-base approach, researchers had to mask new satellite sequences, as well as newly assembled regions on the acrocentric p-arms. %fixme citation?
+We believe that it is necessary to establish approaches that can handle these sequences and their putatively nonlinear patterns of variation.
+%fixme minigraph is also reference-biased
+
+To overcome the limitations of the available methods for pangenome building, we implemented the PangGnomeGraph Builder pipeline (PGGB).
+PGGB allows users to build pangenome graphs able to represent any kind of relationships between the input sequences.
+Our approach is modular and flexible.
+
+
+%fixme PGGB structure
 
 %The Introduction section, of referenced text \cite{bib1} expands on the background of the work (some overlap with the Abstract is acceptable). The introduction should not include subheadings.
 
@@ -142,7 +158,7 @@ Although understanding their relationships is critical for comparative genomics,
 
 \section*{Results}\label{results}
 
-Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text.
+%fixme graph statistics, graph compression, precision/recall/F1-score
 
 %\section*{This is an example for first level head---section head}\label{sec3}
 %
