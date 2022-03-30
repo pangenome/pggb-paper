@@ -1,6 +1,5 @@
 # pggb-paper
 
-
 ## building the manuscript
 
 ```shell
