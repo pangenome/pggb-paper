@@ -140,7 +140,7 @@ This sequence graph model relates the sequences in a pangenome to each other by 
 When built from comprehensive, accurate alignments, pangenome graphs allow us to understand all genetic variation between all sequences in the pangenome.
 
 However, pangenome building is an open problem.
-To properlyu understand genome variability and evolution, we need to obtain an unbiased image of the relationship between multiple sequences.
+To properly understand genome variability and evolution, we need to obtain an unbiased image of the relationship between multiple sequences.
 Due to the quadratic scaling of the all-to-all problem, researchers have instead focused on progressively building the alignment,
 starting with the reference~\cite{Li2020} or using a phylogenetic guide tree to limit the number of alignments~\cite{Armstrong2020}.
 These approaches introduce bias into the resulting model.
@@ -150,7 +150,8 @@ is inappropriate for representing large scale features present in general pangen
 as structural and evolutionary-scale variation do not respect the simplistic linear and hierarchical model.
 %To date, it has been approached by using alignment methods that were traditionally used for large multiple sequence alignments, such as partial order alignment (POA)\cite{Lee2002}.
 %Minigraph~\cite{Li2020} applies a POA-based generalization of the Minimap2~\cite{Li2018} minimizer chaining algorithm to sequence directed acyclic graphs (DAGs).
-%This produces a simple DAG, with a linear reference and a hierarchy of structural variation build out of it.A guide tree has sense when considering distantly-related groups, but it breaks down within species or in the case of incomplete lineage sorting,
+%This produces a simple DAG, with a linear reference and a hierarchy of structural variation build out of it.
+A guide tree has sense when considering distantly-related groups, but it breaks down within species or in the case of incomplete lineage sorting,
 such as is found in the human and primate MHC~\cite{Scally2012}.
 Therefore, when using these alignment methods, the detected structure of variation depends on the chose reference, order, and guide tree.
 Furthermore, to apply such approaches, researchers had to mask new satellite sequences, as well as newly assembled regions on the acrocentric p-arms [FIXME CITATION NEEDED].
@@ -158,35 +159,37 @@ Furthermore, to apply such approaches, researchers had to mask new satellite seq
 We believe that it is necessary to establish methods that can handle all genomic sequences, including complex regions and their putatively nonlinear patterns of variation.
 
 To overcome the limitations of current pangenome building approaches, we implemented the PanGenomeGraph Builder (PGGB) pipeline.
-PGGB renders a collection of sequences into a variation graph~\cite{Garrison2018} able to represent any kind of relationships between the input sequences.
+PGGB renders a collection of sequences into a variation graph~\cite{Garrison2018} able to represent any kind of relationships between them.
 Such a pangenome graph is locally directed and acyclic while preserving large-scale variation.
 Maintaining local linearity is important for pangenome graphs visualization and interpretation.
 PGGB consists in three main steps, i.e. sequence alignment, graph construction, and graph normalization, but our approach is modular and flexible.
 This means that any step can be modified, or replaced by other tools, without affecting the others.
 
 The equal treatment of all genomes is critical to build a pangenome which provides an equitable foundation for studies of genome variation and evolution.
-To avoid any kind of genome reference and order bias, the first step in PGGB is the all-to-all alignment of the input sequences.
+To avoid reference and order bias, the first step in PGGB is the all-to-all alignment of the input sequences.
 We apply WFMASH~\cite{Guarracino_wfmash_2021}, an alignment algorithm that supports rapid and accurate pairwise alignment of T2T assemblies.
 Our approach is fundamentally trivial: we align the sequences directly to each other.
 Each sequence in a pangenome is thus a potential reference for understanding all related variation
 This allows us to remove bias from pangenome analysis.
 The all-to-all alignment of genomes embedds their pluralistic homologies and it implies a variation graph.
-The second step in PGGB is the construction of the pangenome graph in the variation model.
-We apply SEQWISH~\cite{Garrison2022}, a tool constructor that renders a variation graph from a set of input sequences and alignments between them.
+The second step in PGGB is then the construction of the pangenome graph in the variation model.
+We apply SEQWISH~\cite{Garrison2022}, a tool that renders a variation graph from a set of input sequences and alignments between them.
 Like the alignment method we apply, this construction method leads to an unbiased pangenome graph.
-Pangenome graphs produced directly from pairwise alignments contain very complex local structures that result from ambiguous alignments between repetitive sequences.
+Nevertheless, pangenome graphs produced directly from pairwise alignments contain very complex local structures that result from ambiguous alignments between repetitive sequences.
 This issue is akin to the \textit{indel realignment problem} faced during the processing of Illumina sequencing data~\cite{Mose2019}.
 To mitigate this issue, and to improve process efficiency, we typically build our initial raw pangenome graph after
 filtering the alignments to preserve matches longer than a fixed threshold.
 In result, the graphs may also be locally underaligned.
-While the large-scale structure of the graph is correct, the base-level alignments suffer from the erosion of the small matches in the alignments.
+Therefore, while the large-scale structure of the graph is correct, the base-level alignments suffer from the erosion of the small matches in the alignments.
 These issues led us to implement a third step in PGGB for pangenome graph normalization.
 Although structural variation (SV) adds nonlinear complexity to the full pangenome graph, because DNA sequences are linear, in
 any local context of the pangenome their relationships tend to be represented in a linear, ordered model like a multiple sequence alignment.
-We enforce this prior intuition by applying SMOOTHXG (FIXME SUPP. METHODS FOR ITS EXPLANATION), a tool that normalize the
+We enforce this prior intuition by applying SMOOTHXG (SUPP. METHODS FOR ITS EXPLANATION), a tool that normalize the
 graph in one or multiple steps by running a partial order alignment (POA)~\cite{Lee2002} over small pieces of the graph, letting larger SVs remain nonlinear.
+Finally, the normalized pangenome graph is processed by GFAFFIX (CITE https://github.com/marschall-lab/GFAffix), a tool to identify and collapse redundant structures in the graph.
 PGGB concludes with tools that generate 1D and 2D visualizations of the graph and its embedded paths, using the graph genome toolkit ODGI~\cite{Guarracino2021}.
-We can optionally generate a multiple sequence alignment in the traditional MAF format, and VCF files against any chosen set of reference sequences embedded in the graph.
+Futhermore, it can optionally generate a multiple sequence alignment in the traditional MAF format, and VCF files against any chosen set of reference sequences embedded in the pangenome graph.
+
 %The Introduction section, of referenced text \cite{bib1} expands on the background of the work (some overlap with the Abstract is acceptable).
 %The introduction should not include subheadings.
 
@@ -195,8 +198,6 @@ We can optionally generate a multiple sequence alignment in the traditional MAF 
 %These will not be replicated in the typeset article if it is accepted.
 
 %\section*{Results}\label{results}
-
-
 
 %fixme graph statistics, graph compression, precision/recall/F1-score
 
