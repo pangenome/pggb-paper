@@ -107,7 +107,7 @@
     Advances in genome assembly have greatly reduced the cost of obtaining Telomere-to-Telomere (T2T) genome assemblies, but their unbiased analysis remains difficult.
     Pangenome graphs provides an efficient model to represent and analyse multiple genomes.
     In response to the future abundance of high-quality T2T assemblies, we propose the PanGenome Graph Builder (PGGB), a reference-free pangenome graph construction pipeline.
-    We apply our method to several species of the tree of life and show that we can analyse multiple genomes in an unbiased manner.
+    We apply our method to several species of the tree of life and show that we can analyse hundreds of whole genomes in an unbiased manner.
 }
 
 %%================================%%
@@ -130,33 +130,43 @@
 
 \maketitle
 
-\section*{Main}\label{sec1}
+%\section*{Main}\label{sec1}
 
 New assembly approaches based on high-accuracy long sequence reads have made possible to assemble regions of the genomes that were previously inaccessible~\cite{Nurk2021, Logsdon2021, Ebert2021}.
-The study of all these high-quality assemblies has therefore become essential for a comprehensive understanding of the genetic variability of populations.
-Pangenomes are models able to fully represent collections of sequences~\cite{Eizenga2020}.
-A class of methods to represent pangenomes involves the sequence graphs, where similar orthologous regions between genomes collapse into a single representative sequence.
-Pangenome building is a difficult problem, and it has been approached by using alignment methods that were traditionally used for large multiple sequence alignments, such as partial order alignment (POA)\cite{Lee2002}.
-In particular, Minigraph~\cite{Li2020} applies a POA-based generalization of the Minimap2~\cite{Li2018} minimizer chaining algorithm to sequence directed acyclic graphs (DAGs).
-This produces a simple DAG, with a linear reference and a hierarchy of structural variation build out of it.
-This model has a critical limitation: wide structural and evolutionary-scale variation do not respect the simplistic linear and hierarchical model,
-rendering it inappropriate for representing large scale features in general pangenome graphs~\cite{Sekar2016, Hollox2008, Vollger2021}.
-Futhermore, to apply a minigraph-base approach, researchers had to mask new satellite sequences, as well as newly assembled regions on the acrocentric p-arms. %fixme citation?
-We believe that it is necessary to establish approaches that can handle these sequences and their putatively nonlinear patterns of variation.
-%fixme minigraph is also reference-biased
+The study of all these high-quality assemblies has therefore opened the door for a comprehensive understanding of the genetic variability and evolution of populations.
+Pangenomes are models able to fully represent collections of sequences and their variation~\cite{Eizenga2020}.
+A standard model for this representation is the pangenome graph, where similar orthologous regions between genomes collapse into a single representative sequence.
+This sequence graph model relates the sequences in a pangenome to each other by encoding them as walks through a common underlying sequence graph.
+When built from comprehensive, accurate alignments, pangenome graphs allow us to understand all genetic variation between all sequences in the pangenome.
 
-To overcome the limitations of the available methods for pangenome building, we implemented the PangGnomeGraph Builder pipeline (PGGB).
-PGGB allows users to build pangenome graphs able to represent any kind of relationships between the input sequences.
-Our approach is modular and flexible.
+However, pangenome building is an open problem.
+To properlyu understand genome variability and evolution, we need to obtain an unbiased image of the relationship between multiple sequences.
+Due to the quadratic scaling of the all-to-all problem, researchers have instead focused on progressively building the alignment,
+starting with the reference~\cite{Li2020} or using a phylogenetic guide tree to limit the number of alignments~\cite{Armstrong2020}.
+These approaches introduce bias into the resulting model.
+By definition, a progressive approach will generate different structures depending on the order in which genomes are included~\cite{Lee2002, Grasso2004}.
+Moreover, its resulting representation, with a linear reference and a hierarchy of structural variation build out of it,
+is inappropriate for representing large scale features present in general pangenome graphs~\cite{Sekar2016, Hollox2008, Vollger2021},
+as structural and evolutionary-scale variation do not respect the simplistic linear and hierarchical model.
+%To date, it has been approached by using alignment methods that were traditionally used for large multiple sequence alignments, such as partial order alignment (POA)\cite{Lee2002}.
+%Minigraph~\cite{Li2020} applies a POA-based generalization of the Minimap2~\cite{Li2018} minimizer chaining algorithm to sequence directed acyclic graphs (DAGs).
+%This produces a simple DAG, with a linear reference and a hierarchy of structural variation build out of it.A guide tree has sense when considering distantly-related groups, but it breaks down within species or in the case of incomplete lineage sorting,
+such as is found in the human and primate MHC~\cite{Scally2012}.
+Therefore, when using these alignment methods, the detected structure of variation depends on the chose reference, order, and guide tree.
+Furthermore, to apply such approaches, researchers had to mask new satellite sequences, as well as newly assembled regions on the acrocentric p-arms.
+%fixme other pangenome building pipelines in the introduction?
+We believe that it is necessary to establish methods that can handle all genomic sequences, including complex regions and their putatively nonlinear patterns of variation.
 
+%The Introduction section, of referenced text \cite{bib1} expands on the background of the work (some overlap with the Abstract is acceptable).
+%The introduction should not include subheadings.
 
-%fixme PGGB structure
+%Springer Nature does not impose a strict layout as standard however authors are advised to check the individual requirements for the journal they are planning to submit to as there may be journal-level preferences.
+%When preparing your text please also be aware that some stylistic choices are not supported in full text XML (publication version), including coloured font.
+%These will not be replicated in the typeset article if it is accepted.
 
-%The Introduction section, of referenced text \cite{bib1} expands on the background of the work (some overlap with the Abstract is acceptable). The introduction should not include subheadings.
+%\section*{Results}\label{results}
 
-%Springer Nature does not impose a strict layout as standard however authors are advised to check the individual requirements for the journal they are planning to submit to as there may be journal-level preferences. When preparing your text please also be aware that some stylistic choices are not supported in full text XML (publication version), including coloured font. These will not be replicated in the typeset article if it is accepted.
-
-\section*{Results}\label{results}
+Results...
 
 %fixme graph statistics, graph compression, precision/recall/F1-score
 
@@ -551,7 +561,7 @@ Our approach is modular and flexible.
 %
 %If your manuscript includes potentially identifying patient/participant information, or if it describes human transplantation research, or if it reports results of a clinical trial then  additional information will be required. Please visit (\url{https://www.nature.com/nature-research/editorial-policies}) for Nature Portfolio journals, (\url{https://www.springer.com/gp/authors-editors/journal-author/journal-author-helpdesk/publishing-ethics/14214}) for Springer Nature journals, or (\url{https://www.biomedcentral.com/getpublished/editorial-policies\#ethics+and+consent}) for BMC.
 
-\section*{Discussion}\label{discussion}
+%\section*{Discussion}\label{discussion}
 
 %Discussions should be brief and focused. In some disciplines use of Discussion or `Conclusion' is interchangeable. It is not mandatory to use both. Some journals prefer a section `Results and Discussion' followed by a section `Conclusion'. Please refer to Journal-level guidance for any specific requirements.
 
@@ -563,58 +573,67 @@ Our approach is modular and flexible.
 
 \backmatter
 
-\bmhead{Supplementary information}
+\bmhead{Online content}
+Any methods, additional references, Nature Research reporting summaries, source data, extended data, supplementary information, acknowledgements, peer review information; details of
+author contributions and competing interests; and statements of
+data and code availability are available at https://doi.org/10.1038/
+s41587-022-01261-x.
 
-If your article has accompanying supplementary file/s please state so here. 
-
-Authors reporting data from electrophoretic gels and blots should supply the full unprocessed scans for key as part of their Supplementary information. This may be requested by the editorial team/s if it is missing.
-
-Please refer to Journal-level guidance for any specific requirements.
-
-\bmhead{Acknowledgments}
-
-Acknowledgments are not compulsory. Where included they should be brief. Grant or contribution numbers may be acknowledged.
-
-Please refer to Journal-level guidance for any specific requirements.
-
-\section*{Declarations}
-
-Some journals require declarations to be submitted in a standardised format. Please check the Instructions for Authors of the journal to which you are submitting to see if you need to complete this section. If yes, your manuscript must contain the following sections under the heading `Declarations':
-
-\begin{itemize}
-\item Funding
-\item Conflict of interest/Competing interests (check journal-specific guidelines for which heading to use)
-\item Ethics approval 
-\item Consent to participate
-\item Consent for publication
-\item Availability of data and materials
-\item Code availability 
-\item Authors' contributions
-\end{itemize}
-
-\noindent
-If any of the sections are not relevant to your manuscript, please include the heading and write `Not applicable' for that section. 
-
-%%===================================================%%
-%% For presentation purpose, we have included        %%
-%% \bigskip command. please ignore this.             %%
-%%===================================================%%
-\bigskip
-\begin{flushleft}%
-Editorial Policies for:
-
-\bigskip\noindent
-Springer journals and proceedings: \url{https://www.springer.com/gp/editorial-policies}
-
-\bigskip\noindent
-Nature Portfolio journals: \url{https://www.nature.com/nature-research/editorial-policies}
-
-\bigskip\noindent
-\textit{Scientific Reports}: \url{https://www.nature.com/srep/journal-policies/editorial-policies}
-
-\bigskip\noindent
-BMC journals: \url{https://www.biomedcentral.com/getpublished/editorial-policies}
-\end{flushleft}
+%\bmhead{Supplementary information}
+%
+%If your article has accompanying supplementary file/s please state so here.
+%
+%Authors reporting data from electrophoretic gels and blots should supply the full unprocessed scans for key as part of their Supplementary information. This may be requested by the editorial team/s if it is missing.
+%
+%Please refer to Journal-level guidance for any specific requirements.
+%
+%\bmhead{Acknowledgments}
+%
+%Acknowledgments are not compulsory.
+%Where included they should be brief. Grant or contribution numbers may be acknowledged.
+%
+%Please refer to Journal-level guidance for any specific requirements.
+%
+%%\section*{Declarations}
+%%
+%%Some journals require declarations to be submitted in a standardised format.
+%%Please check the Instructions for Authors of the journal to which you are submitting to see if you need to complete this section.
+%%If yes, your manuscript must contain the following sections under the heading `Declarations':
+%%
+%%\begin{itemize}
+%%\item Funding
+%%\item Conflict of interest/Competing interests (check journal-specific guidelines for which heading to use)
+%%\item Ethics approval
+%%\item Consent to participate
+%%\item Consent for publication
+%%\item Availability of data and materials
+%%\item Code availability
+%%\item Authors' contributions
+%%\end{itemize}
+%%
+%%\noindent
+%%If any of the sections are not relevant to your manuscript, please include the heading and write `Not applicable' for that section.
+%%
+%%%%===================================================%%
+%%%% For presentation purpose, we have included        %%
+%%%% \bigskip command. please ignore this.             %%
+%%%%===================================================%%
+%%\bigskip
+%%\begin{flushleft}%
+%%Editorial Policies for:
+%%
+%%\bigskip\noindent
+%%Springer journals and proceedings: \url{https://www.springer.com/gp/editorial-policies}
+%%
+%%\bigskip\noindent
+%%Nature Portfolio journals: \url{https://www.nature.com/nature-research/editorial-policies}
+%%
+%%\bigskip\noindent
+%%\textit{Scientific Reports}: \url{https://www.nature.com/srep/journal-policies/editorial-policies}
+%%
+%%\bigskip\noindent
+%%BMC journals: \url{https://www.biomedcentral.com/getpublished/editorial-policies}
+%%\end{flushleft}
 
 \begin{appendices}
 
