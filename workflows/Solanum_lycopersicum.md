@@ -1,13 +1,13 @@
-# GenusSpecies
-Tomato (*Solanum lycoperscium*) is an important fruit crop and a model system for plant biology and breeding.
+# Tomato
+Tomato (**Solanum lycoperscium**) is an important fruit crop and a model system for plant biology and breeding.
 
 ## Data collection
-We use the inbreeding HiFi assemblies from Zhou et.al 2022, the data was deposited at http://solomics.agis.org.cn/tomato/ftp/genome/
+We use the inbreeding HiFi assemblies from Zhou et.al 2022, the data was deposited at [SolOmics](http://solomics.agis.org.cn/tomato/ftp/genome/)
 
 ```
 mkdir -p assemblies/tomato
 cd assemblies/tomato
-cat ../../docs/data/tomato.urls| parallel -j 4 'wget -q {} && echo got {}'
+cat ../data/tomato.urls| parallel -j 4 'wget -q {} && echo got {}'
 ```
 
 ## Pangenome Sequence Naming
@@ -18,24 +18,26 @@ Remove all the unplaced contigs since high repeat nature of these contigs and ca
 ls *.fasta.gz | while read f; do
     prefix=${echo $f|cut -f1 -d "."};
     echo $prefix
-    seqkit fastix -p "${prefix}#1#" < (zcat $f|cut -f 1)|bgzip -@ 32 -c > ${prefix}.fa.gz;
+    fastix -p "${prefix}#1#" < (zcat $f|cut -f 1)|bgzip -@ 32 -c > ${prefix}.fa.gz;
     samtools faidx $prefix.fa.gz
 done
 ```
 
 ## Sequence partitioning
 
-Split into different chromosomes for better graph and parallaize the computing.
+All assemblies had scaffolded by `RagTag` by synteny-guided. So we just use all the chromosome information for better graph and parallaize the computing.
 
 ```bash
-for ch in `seq 1 12`;
+for chr in `seq 1 12`;
 do
-    for i in `ls *.fa.gz|cut -f1 -d "."`;
+    for s in `ls *.fa.gz|cut -f1 -d "."`;
     do
-        samtools faidx ${i}
-
-
-
+        samtools faidx ${s}.fa.gz ${chr} >> chr${chr}.fa
+    done
+    
+    bgzip -@ 24 chr${chr}.fa
+    samtools faidx chr${chr}.fa.gz
+done
 ```
 
 
@@ -43,8 +45,9 @@ do
 Estimated the divergence of each chromosomes to set the parameters of `pggb -p`.
 
 ```bash
-
-
+ls *.fasta.gz | while read f; do mash sketch $f; done
+mash triangle *.fa.gz > tomato.mash_triangle.txt
+sed 1,1d tomato.mash_triangle.txt | tr '\t' '\n' | grep e -v | sort -g -k 1nr | head -n 5
 ```  
 
 
@@ -78,15 +81,22 @@ Call small variants using the DeepVariant using HiFi reads as this repo describe
 Only keep the variant and homozygous variants as baseline of DeppVariant callsets
 
 ```bash
-
+for s in `ls *.fasta.gz|cut -f1 -d "."`;
+do 
+    bcftools view -s ${s} --threads 4 -v snps Tomato.deepvariant.hifi.vcf.gz|bcftools view -g hom -e 'GT="ref"' -O z -o ${s}.hifi.snps.vcf.gz
+    bcftools view -s ${s} --threads 4 -v indels Tomato.deepvariant.hifi.vcf.gz|bcftools view -g hom -e 'GT="ref"' -O z -o ${s}.hifi.indels.vcf.gz
+done
 ```
 
 
 
 ### Postprocessing the pggb callsets
-Filter and 
+Filter the variant size and split multiallelic variants
 
 ```bash
+
+bash ../scripts/
+
 ```
 
 
