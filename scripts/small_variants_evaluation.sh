@@ -1,13 +1,16 @@
 #!/bin/bash
 
+# Usage: small_variants_evaluation.sh <SAMPLE name> <SDF of ref>
 
 SAMPLE=$1
-thread=$2
-SDF=$3
+thread=4
+SDF=$2
+
+# snp
 # easy region
 rtg vcfeval \
         -t $sdf \ 
-        -b ../hifi/variant/${SAMPLE}.hifi.snps.vcf.gz \
+        -b ${SAMPLE}.hifi.snps.vcf.gz \
         -c ${SAMPLE}.pggb.snps.vcf.gz \
         --region=easy_region.bed \
         -T ${thread} \
@@ -16,7 +19,7 @@ rtg vcfeval \
 # hard region
 rtg vcfeval \
         -t $SDF \ 
-        -b ../hifi/variant/${SAMPLE}.hifi.snps.vcf.gz \
+        -b ${SAMPLE}.hifi.snps.vcf.gz \
         -c ${SAMPLE}.pggb.snps.vcf.gz \
         --region=hard_region.bed \
         -T ${thread} \

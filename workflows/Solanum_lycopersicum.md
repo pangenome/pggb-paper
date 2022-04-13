@@ -95,12 +95,31 @@ Filter the variant size and split multiallelic variants
 
 ```bash
 
-bash ../scripts/
+for v in `ls chr*.fa.gz.*.smooth.fix.SL5.vcf.gz`;
+do
+    for s in `cat sample.list`;
+    do
+        bash ../scripts/vcf_preprocess.sh ${v} ${s} 50
+    done
+done
+```
+
+### Benchmarking
+`rtg vcfeval` for benchmarking
+
+```bash
+
+for v in `ls chr*.fa.gz.*.smooth.fix.SL5.vcf.gz`;
+do
+    for s in `cat sample.list`;
+    do
+        bash ../scripts/small_variant_ ${v} ${s} 50
+    done
+done
 
 ```
 
 
-### Benchmarking
 
 
 

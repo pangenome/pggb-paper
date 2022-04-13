@@ -9,11 +9,13 @@ PREFIX=$(dirname $VCF)/"${FNAME%.vcf.gz}"
 SAMPLE=$2
 CHROMS=`seq 1 12`
 MAXSIZE=$3
-REF="SL5.fa.gz"
+REF="SL5.fasta.gz"
 MEM="10G"
 
 bcftools=bcftools
 
+
+#filter
 $bcftools view -a -s ${SAMPLE} -Ou ${VCF} \
     | $bcftools norm -f ${REF} -c s -m - -Ou \
     | $bcftools view -e 'GT="ref" | GT~"\."' -f 'PASS,.' -Ou \
@@ -25,6 +27,7 @@ $bcftools view -a -s ${SAMPLE} -Ou ${VCF} \
                  ${PREFIX}.${SAMPLE}.norm.vcf.gz \
     #$bcftools index -t ${PREFIX}.max${MAXSIZE}.${SAMPLE}.chr1-12.vcf.gz \
     rm ${PREFIX}.${SAMPLE}.norm.vcf.gz*
+
 ## haploid to diploid
     zcat ${PREFIX}.max${MAXSIZE}.${SAMPLE}.chr1-12.vcf.gz|sed "s#GT\t1#GT\t1/1#g" > ${PREFIX}.max${MAXSIZE}.${SAMPLE}.chr1-12.dip.vcf
     bgzip -@ 12 ${PREFIX}.max${MAXSIZE}.${SAMPLE}.chr1-12.dip.vcf
