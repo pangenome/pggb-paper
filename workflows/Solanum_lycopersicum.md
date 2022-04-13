@@ -113,7 +113,7 @@ for v in `ls chr*.fa.gz.*.smooth.fix.SL5.vcf.gz`;
 do
     for s in `cat sample.list`;
     do
-        bash ../scripts/small_variant_ ${v} ${s} 50
+        bash ../scripts/small_variants_evaluation.sh ${s} SL5.sdf
     done
 done
 
