@@ -9,11 +9,11 @@
 ...
 
 
-## Divergence estimation
+## Sequence partitioning
 ...
 
 
-## Sequence partitioning
+## Divergence estimation
 ...
 
 
