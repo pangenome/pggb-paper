@@ -27,4 +27,4 @@ The goal of this workflow is to perform comparative evolutionary analyses on sev
 
 
 ## Analyses
-![An ODGI viz visualization of the SAMD9 locus](/data/out.chr7.10000/SAMD9_Clint/SAMD9_Clint.sorted.png)
+![An ODGI viz visualization of the SAMD9 locus](data/out.chr7.10000/SAMD9_Clint/SAMD9_Clint.sorted.png)
