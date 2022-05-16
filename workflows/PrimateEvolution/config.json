@@ -1,0 +1,79 @@
+{
+   
+    "extract_loci":{
+    
+        "SAMD9_Clint":{
+            "graph":"data/out.chr7.10000/chr7.input.fa.gz.e6f73d2.e34d4cd.20398a9.smooth.final.og",
+            "graph_path":"out.chr7.10000",
+            "locus":"Clint_PTRv2#NC_036886.1:89120280-89210088"
+        },
+
+        "SAMD9_GRC38":{
+            "graph":"data/out.chr7.10000/chr7.input.fa.gz.e6f73d2.e34d4cd.20398a9.smooth.final.og",
+            "graph_path":"out.chr7.10000",
+            "locus":"GRC38#CM000669.2:93060633-93150835"
+        },
+        "HLA_GRC38":{
+            "graph":"data/out.chr6.10000/chr6.input.fa.gz.e6f73d2.e34d4cd.20398a9.smooth.final.og",
+            "graph_path":"out.chr6.10000",
+            "locus":"GRC38#CM000668.2:29657092-33192467"
+        }
+    
+    },
+    
+    "contig_communities":{
+        "asssembly_order":["GRC38", 
+                           "Clint_PTRv2", 
+                           "Mhudiblu_PPA_v2", 
+                           "Kamilah_GGO_v0"],
+        "communities":{
+            "chr6": ["CM000668.2",
+                     "NC_036885.1",
+                     "CM023033.3",
+                     "CM017853.1"],
+            "chr7": ["CM000669.2",
+                     "NC_036886.1",
+                     "CM023034.3",
+                     "CM017854.1"]
+        }
+    },
+    "assemblies":{
+        "GRC38":{
+            "genbank_accession":"GCA_000001405.28",
+            "species":"human",
+            "fn_fna":"GCA_000001405.28_GRCh38.p13_genomic.fna.gz",
+            "fn_ftp":"https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/GCA_000001405.28_GRCh38.p13/GCA_000001405.28_GRCh38.p13_genomic.fna.gz",
+        },
+        "Clint_PTRv2":{
+            "genbank_accession":"GCA_002880755.3",
+            "species":"chimp",
+            "fn_fna":"GCF_002880755.1_Clint_PTRv2_genomic.fna.gz",
+            "fn_ftp":"https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/002/880/755/GCF_002880755.1_Clint_PTRv2/GCF_002880755.1_Clint_PTRv2_genomic.fna.gz"
+        },
+        "Mhudiblu_PPA_v2":{
+            "genbank_accession":"GCA_013052645.3",
+            "species":"bornean_orangutan",
+            "fn_fna":"GCA_013052645.3_Mhudiblu_PPA_v2_genomic.fna.gz",
+            "fn_ftp":"https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/013/052/645/GCA_013052645.3_Mhudiblu_PPA_v2/GCA_013052645.3_Mhudiblu_PPA_v2_genomic.fna.gz"
+        },
+        "Kamilah_GGO_v0":{
+            "genbank_accession":"GCA_008122165.1",
+            "species":"gorilla",
+            "fn_fna":"GCA_008122165.1_Kamilah_GGO_v0_genomic.fna.gz",
+            "fn_ftp":"https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/008/122/165/GCA_008122165.1_Kamilah_GGO_v0/GCA_008122165.1_Kamilah_GGO_v0_genomic.fna.gz"
+        },
+    },
+    "other_assemblies":{
+        "Susie_PABv2":{
+            "genbank_accession":"GCA_002880775.3",
+            "species":"sumatran_orangutan",
+            "fa":"https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/002/880/775/GCA_002880775.3_Susie_PABv2/GCA_002880775.3_Susie_PABv2_genomic.fna.gz"
+        },
+        "ASM1689442v1":{
+            "genbank_accession":"GCA_016894425.1",
+            "species":"human",
+            "fn_fna":"???",
+            "fn_ftp":"????"
+        },
+    }
+}

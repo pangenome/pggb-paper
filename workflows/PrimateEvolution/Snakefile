@@ -1,0 +1,176 @@
+configfile: "config.json"
+
+
+
+
+def get_extract_loci(wildcards):
+    
+    inputs = []
+
+    for locus, inf in config['extract_loci'].items():
+        print(inf)
+        inputs.append("data/{graph_path}/{locus}/{locus}.sorted.png"
+                      "".format(graph_path = inf['graph_path'],
+                                locus = locus))
+    return inputs
+
+rule all:
+    input:
+        get_extract_loci
+        #"data/out.chr6.10000/multiqc_config.yaml",
+        #"data/out.chr7.10000/multiqc_config.yaml"
+        #"data/chr7.input.fa.gz",
+        #"data/chr6.input.fa.gz"
+
+
+rule extract_locus:
+    input:
+        "data/out.chr6.10000/multiqc_config.yaml",
+        "data/out.chr7.10000/multiqc_config.yaml"
+    output:
+        png="data/{contig}/{target}/{target}.sorted.png",
+        subgraph="data/{contig}/{target}/{target}.og",
+        sorted_subgraph="data/{contig}/{target}/{target}.sorted.og"
+    run:
+        pggb_path="/global/scratch2/psudmant/software/pggp/pggb_curr"
+        PWD="/global/scratch2/psudmant/projects/pggb/pggb_primate_example"
+        locus = config["extract_loci"][wildcards.target]["locus"] 
+        graph = config["extract_loci"][wildcards.target]["graph"] 
+        
+        cmd = ("singularity "
+               "run -B {PWD}/data:/data "
+               "-H {PWD} "
+               "{pggb_path} "
+               "\"odgi extract -E -i /{graph} -o /{subgraph} -r {locus}\""
+               "".format(pggb_path=pggb_path,
+                         PWD=PWD,
+                         locus=locus,
+                         graph=graph,
+                         subgraph=output.subgraph))
+        print(cmd)
+        shell(cmd)
+        cmd = ("singularity "
+               "run -B {PWD}/data:/data "
+               "-H {PWD} "
+               "{pggb_path} "
+               "\"odgi sort -O -Y -i /{subgraph} -o /{sorted_subgraph}\""
+               "".format(pggb_path=pggb_path,
+                         PWD=PWD,
+                         subgraph=output.subgraph,
+                         sorted_subgraph=output.sorted_subgraph))
+        print(cmd)
+        shell(cmd)
+
+        cmd = ("singularity "
+               "run -B {PWD}/data:/data "
+               "-H {PWD} "
+               "{pggb_path} "
+               "\"odgi viz -i /{sorted_subgraph} -o /{png}\""
+               "".format(pggb_path=pggb_path,
+                         PWD=PWD,
+                         sorted_subgraph=output.sorted_subgraph,
+                         png=output.png))
+        print(cmd)
+        shell(cmd)
+
+rule run_pggb:
+    input:
+        fa_input="data/{contig}.input.fa.gz"
+    output:
+        out="data/out.{contig}.{seg_len}/multiqc_config.yaml"
+    run:
+        pggb_path="/global/scratch2/psudmant/software/pggp/pggb_curr"
+        PWD="/global/scratch2/psudmant/projects/pggb/pggb_primate_example"
+        outdir = "data/out.{contig}.{seg_len}".format(contig=wildcards.contig,
+                                                      seg_len=wildcards.seg_len) 
+        cmd = ("singularity "
+               "run -B {PWD}/data:/data "
+               "-H {PWD} "
+               "{pggb_path} "
+               "\"pggb -i /{fa_input} "
+               "-p 95 "
+               "-s {seg_len} "
+               "-n 4 "
+               "-t 24 "
+               "-o /{outdir} "
+               #"-M -C cons,100,1000,10000 -m\""
+               "-M -m\""
+               "".format(pggb_path=pggb_path,
+                         fa_input = input.fa_input,
+                         seg_len = wildcards.seg_len,
+                         outdir=outdir,
+                         PWD=PWD))
+        print(cmd)
+        shell(cmd)
+
+
+def get_fa_idxs(wildcards):
+    inputs = []
+    for g, info in config['assemblies'].items():
+
+        inputs.append("data/input_genomes/{g}/{fn_fna}.fai"
+                      "".format(g=g,
+                                fn_fna=info['fn_fna']))
+    return(inputs)
+
+"""
+https://github.com/pangenome/PanSN-spec
+uses this hack https://github.com/ekg/fastix
+"""
+rule make_input_fa:
+    input:
+        get_fa_idxs
+    output:
+        fa_out="data/{contig}.input.fa.gz"
+    run:
+        fastix="/global/home/users/psudmant/code/fastix/target/debug/fastix"
+        shell("> {fa_out}".format(fa_out=output.fa_out.replace(".gz","")))
+        assemblies = config['contig_communities']['asssembly_order']
+        for i, contig in enumerate(config['contig_communities']['communities'][wildcards.contig]):
+            curr_assembly = assemblies[i] 
+            fn_fa=config['assemblies'][curr_assembly]['fn_fna']
+            shell("samtools faidx "
+                  "data/input_genomes/{g}/{fn_fa} "
+                  "{contig} | "
+                  "{fastix} "
+                  "--prefix {g}# "
+                  "/dev/stdin "
+                  ">>{fa_out}"
+                  "".format(fn_fa=fn_fa,
+                            fastix=fastix,
+                            contig=contig,
+                            g=curr_assembly,
+                            fa_out=output.fa_out.replace(".gz","")))
+        shell("bgzip {fa_out}".format(fa_out = output.fa_out.replace(".gz","")))
+        shell("samtools faidx {fa_out}".format(fa_out = output.fa_out))
+
+
+def get_fa(wildcards):
+    inputs = []
+    inf = config['assemblies'][wildcards.g]
+    ret = ("data/input_genomes/{g}/{fa}"
+           "".format(g=wildcards.g,
+                     fa=inf['fn_fna']))
+    return(ret)
+
+rule idx_fa:
+    input:
+        get_fa
+    output:
+        idx_out="data/input_genomes/{g}/{fn_fna}.fna.gz.fai"
+    run:
+        fa_gz = input[0]
+        fa = fa_gz.replace(".gz","")
+        shell("gunzip {fa_gz_in}".format(fa_gz_in=fa_gz))
+        shell("bgzip {fa_gz_in}".format(fa_gz_in=fa))
+        shell("samtools faidx {fa_bz_out}".format(fa_bz_out=fa_gz))
+                                    
+rule download:
+    output:
+        fa_gz_out="data/input_genomes/{g}/{fn_fna}.fna.gz"
+    run:
+        ftp_path = config['assemblies'][wildcards.g]["fn_ftp"]
+        shell("wget -O {fn_out} {ftp_path}".format(fn_out=output.fa_gz_out,
+                                                   ftp_path=ftp_path))
+
+
