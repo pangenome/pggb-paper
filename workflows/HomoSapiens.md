@@ -83,7 +83,7 @@ ls *.f1_assembly_v2_genbank.fa | while read FASTA; do
     samtools faidx $NAME.unaligned.fa
     
     PATH_NO_SPLIT_PAF=/lizardfs/guarracino/pggb-paper/hsapiens/assemblies/partitioning/$NAME.vs.ref.no_split.paf
-    sbatch -p headnode -c 12 --wrap "wfmash $PATH_REFERENCE_FA_GZ /lizardfs/guarracino/pggb-paper/hsapiens/assemblies/$NAME.unaligned.fa -s 50k -p 90 -m -t 12 > $PATH_NO_SPLIT_PAF"
+    sbatch -p headnode -c 12 --wrap "$RUN_WFMASH $PATH_REFERENCE_FA_GZ /lizardfs/guarracino/pggb-paper/hsapiens/assemblies/$NAME.unaligned.fa -s 50k -p 90 -m -t 12 > $PATH_NO_SPLIT_PAF"
   fi
 done
 ```
@@ -132,7 +132,7 @@ done
 ## Divergence estimation
 
 The assemblies are at the contig level, so we can't just estimate the divergence with `mash`.
-Since human presents a low sequence divergence, so we will set the mapping identity (`-p` parameter`) in `pggb` to `98`.
+Since human presents a low sequence divergence, so we will set the mapping identity (`-p` parameter) in `pggb` to `98`.
 
 
 ## Pangenome graph building
