@@ -239,6 +239,9 @@ bcftools merge --output-type z --threads "${n_threads}" ${all_files[@]} \
 ### prepare header for the next chunk
 bgzip -b -c "${dir_out}/multis-snps.vcf.gz" | grep "^#" \
 > "${dir_out}/multis-snps-genfix.vcf"
+
+### back to the main folder
+cd "${dir_multis}"
 ```
 
 Now, we have to check whether the genotypes which are missing (e.g. any entry reporting "." in the fields of columns 10-16 of the multi-sample vcf file) are due to the presence of a reference allele or to a missing alignment. In the first case we replace them with a reference genotype (namely "0") otherwise we keep the missing genotype (".") record. For this purpose, we use an R script stored in the "script" folder.
