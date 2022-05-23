@@ -1,0 +1,6 @@
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=FRMR,Number=1,Type=Integer,Description="Reading frame for the reference sequence (from nucmer), 1 for forward, -1 for reverse">
+##FORMAT=<ID=FRMQ,Number=1,Type=Integer,Description="Reading frame for the query sequence (from nucmer), 1 for forward, -1 for reverse">
+##FORMAT=<ID=CHRQ,Number=1,Type=String,Description="The contig ID of the query">
+##FORMAT=<ID=STARTQ,Number=1,Type=Integer,Description="Variant start position in the query">
+##FORMAT=<ID=ENDQ,Number=1,Type=Integer,Description="Variant end position in the query">
