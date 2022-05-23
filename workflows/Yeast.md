@@ -23,4 +23,18 @@ data
 
 The annotation are provided as GFF files. Mitochondrial and nuclear data are separated for convenience. The same holds for genomes. The latter are provided as *.fa.gz files. Indexes (obtained from "samtools faidx" of the fasta files) are also included. The files are already well-formatted for the following scripts. Yeast's chromosomes are encoded with Roman numerals, so e.g. chromosome ten is encoded as "chrX". Nobody likes it but do not ask a yeast geneticist to change it.
 
+## Dependencies
+
+The following command-line tools and R packages are required:
+
+- bcftools
+- bgzip
+- tabix
+- mummer
+- wait -n (may be missing in macOS)
+- bedtools
+- RepeatMasker
+- rtg
+- data.table (R package)
+
 ## Graph construction and variant calls
