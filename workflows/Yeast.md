@@ -2,22 +2,24 @@
 
 ## Preamble
 
-In this tutorial we will use the SGD reference genome and 7 yeast genomes from 7 strains of the *S. cerevisiae* to build a variation graph and call variants from it. The aforementioned 7 strains are described in Yue *et al.* [Yue J, ..., & Liti G. Contrasting evolutionary genome dynamics between domesticated and wild yeasts. NAT GENET. 2017.]. They represent different populations of homozygous diploids which were sequenced with PacBio and Illumina platforms and *de novo* assembled. The yeast reference genome is described here: https://www.yeastgenome.org.
+In this tutorial we will use the *S. cerevisiae* SGD reference genome and 7 yeast assemblies from 7 strains of the *S. cerevisiae* to build a variation graph and call variants from it. The aforementioned 7 strains are described in Yue *et al.* [Yue J, ..., & Liti G. Contrasting evolutionary genome dynamics between domesticated and wild yeasts. NAT GENET. 2017.]. They represent different populations of homozygous diploids which were sequenced with PacBio and Illumina platforms and *de novo* assembled. The yeast reference genome is described here: https://www.yeastgenome.org.
 
-The biallelic SNVs called from the variation graph will be compared to those obtained from the pairwise alignments of each the 7 genomes against the SGD reference. The latter will be used as the ground truth to calculate precision, recall, as well as the F1-score. Moreover, the ground truth will be stratified in two types of variants: those lying is "easy" regions and those lying in "hard regions". The latter include genomic regions which are repeated or features, such as Tys (yeast transposable elements), which are known to be repeated.
+The bi-allelic SNVs called from the variation graph will be compared to those obtained from the pairwise alignments of each the 7 genomes against the SGD reference. The latter will be used as the ground truth to calculate precision, recall, as well as the F1-score. Moreover, the ground truth will be stratified in two types of variants: those lying is "easy" regions and those lying in "hard regions". The latter include genomic regions which are repeated or features, such as Tys (yeast transposable elements), which are known to be repeated.
 
 All the input sequences are provided in the "genomes" folder while the corresponding annotations are stored in the "annotations" folder. All the scripts needed to run the analysis are stored in the "scripts" folder.
 
 ## Data
 
 The structure of the "genomes" folder is:
+
 ```
 genomes/
 ├── collinear
 ├── rearranged
 └── reference
 ```
-The genome are organised using *a priori* knowledge (as reported in Yue *et al.*). The files are already well-formatted for the following scripts. Yeast's chromosomes are encoded with Roman numerals, so e.g. chromosome ten is encoded as "chrX". Nobody likes it but do not ask a yeast geneticist to change it.
+
+The genomes are organised using *a priori* knowledge (as reported in Yue *et al.*). The files are already well-formatted for the following scripts. Yeast's chromosomes are encoded with Roman numerals, so e.g. chromosome ten is encoded as "chrX". Nobody likes it but do not ask a yeast geneticist to change it.
 
 ## Dependencies
 
@@ -195,13 +197,13 @@ find "${out_dir}" -name "*delta" | xargs rm
 cd "${dir_aln}"
 ```
 
-Now, we  have to convert the output of nucmer to a vcf. For this purpose we use a custom R script (nucmer-vcf.R) which is in the "scripts" folder. To run it you can use the following command line from the main folder.
+Now, we  have to convert the output of nucmer to a vcf. For this purpose we use a custom R script (nucmer-vcf.R) which is in the "scripts" folder. To run it you can use the following command line from the main folder. The results are stored in the "os--vcf" folder.
 
 ```
 Rscript scripts/nucmer-vcf.R $(pwd)
 ```
 
-The single-sample vcf files can be converted in a multi-sample vcf file.
+The single-sample vcf files can be converted in a multi-sample vcf file. It is stored in the "ms-folder".
 
 ```
 ## settings -------------------------------------------------------------------
@@ -244,10 +246,13 @@ bgzip -b -c "${dir_out}/multis-snps.vcf.gz" | grep "^#" \
 cd "${dir_multis}"
 ```
 
-Now, we have to check whether the genotypes which are missing (e.g. any entry reporting "." in the fields of columns 10-16 of the multi-sample vcf file) are due to the presence of a reference allele or to a missing alignment. In the first case we replace them with a reference genotype (namely "0") otherwise we keep the missing genotype (".") record. For this purpose, we use an R script stored in the "script" folder.
+Now, we have to check whether the genotypes which are missing (e.g. any entry reporting "." in the fields of columns 10-16 of the multi-sample vcf file) are due to the presence of a reference allele or to a missing alignment. In the first case we replace them with a reference genotype (namely "0") otherwise we keep the missing genotype (".") record. For this purpose, we use an R script stored in the "script" folder. The output vcf file (multis-snps-genfix.vcf) is stored in the "ms-vcf" folder.
 
 ```
 Rscript scripts/check-non-alt.R $(pwd)
 ```
+## Variants stratification
+
+Only "callable" variants are taken into account.
 
 ## Graph construction and variant calls
