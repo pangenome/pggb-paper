@@ -11,12 +11,15 @@ All the input data are provided in the "data" folder. All the scripts need to ru
 ## Data
 
 The tree of the "data" folder is:\
-├── annotations\
-│   ├── mitochondrial\
-│   └── nuclear\
-└── genomes\
-    ├── haploid-collapsed\
-    └── mitochondrial\
+```
+data
+├── annotations
+│   ├── mitochondrial
+│   └── nuclear
+└── genomes
+    ├── haploid-collapsed
+    └── mitochondrial
+    ```
 
 The annotation are provided as GFF files. Mitochondrial and nuclear data are separated for convenience. The same holds for genomes. The latter are provided as *.fa.gz files. Indexes (obtained from "samtools faidx" of the fasta files) are also included. The files are already well-formatted for the following scripts. Yeast's chromosomes are encoded with Roman numerals, so e.g. chromosome ten is encoded as "chrX". Nobody likes it but do not ask a yeast geneticist to change it.
 
