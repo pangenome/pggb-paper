@@ -44,13 +44,13 @@ git clone -b yeast https://github.com/pangenome/pggb-paper.git
 
 ## Variant call from the linear genomes
 
-Here, we align the SGD genome against any other assembly. Before running the following bash lines, "cd" to the main folder of the yeast repository. This chunk produces the *-coords.txt and *-var.txt for each of the genomes aligned against SGD. The former is the file  with the detected variants while the latter is the file reporting the alignments.
+Here, we align the SGD genome against any other assembly. Before running the following bash lines, "cd" to the main folder of the yeast repository. This chunk produces the *-coords.txt and *-var.txt for each of the genomes aligned against SGD. The former is the file  with the detected variants while the latter is the file reporting the alignments. Both files can be found in the "nuc-aln" folder which has been created in the main folder of the repository.
 
 ```
 ## settings -------------------------------------------------------------------
 
 ### base folder
-dir_aln=$(echo $PWD)
+dir_aln=$(pwd)
 ### parallel runs
 pll_runs=4
 ### suppress long messages from background processes
@@ -195,9 +195,56 @@ find "${out_dir}" -name "*delta" | xargs rm
 cd "${dir_aln}"
 ```
 
-Now we  have to convert the output of nucmer to a vcf. For this purpose we use a custom R script.
+Now, we  have to convert the output of nucmer to a vcf. For this purpose we use a custom R script (nucmer-vcf.R) which is in the "scripts" folder. To run it you can use the following command line from the main folder.
 
+```
+Rscript scripts/nucmer-vcf.R $(pwd)
+```
 
+The single-sample vcf files can be converted in a multi-sample vcf file.
 
+```
+## settings -------------------------------------------------------------------
+
+### threads
+n_threads=4
+
+### base dir
+dir_multis=$(pwd)
+
+### input and output folders
+dir_input="${dir_multis}/os-vcf"
+dir_out="${dir_multis}/ms-vcf"
+if [[ -d "${dir_out}" ]]; then
+  rm -rf "${dir_out}"
+fi
+mkdir -p "${dir_out}"
+
+## clmnt ----------------------------------------------------------------------
+
+cd "${dir_input}"
+rm -f *tbi
+
+### compress with bgzip all the single-sample vcf files and index with tabix
+for vcf_file in $(find . -name "*vcf"); do
+  bgzip -c -f "${vcf_file}" > "${vcf_file}.gz"
+  tabix "${vcf_file}.gz"
+done
+
+### merge to one multisample vcf with bcftools
+all_files=( $(find . -name "*vcf.gz") )
+bcftools merge --output-type z --threads "${n_threads}" ${all_files[@]} \
+> "${dir_out}/multis-snps.vcf.gz"
+
+### prepare header for the next chunk
+bgzip -b -c "${dir_out}/multis-snps.vcf.gz" | grep "^#" \
+> "${dir_out}/multis-snps-genfix.vcf"
+```
+
+Now, we have to check whether the genotypes which are missing (e.g. any entry reporting "." in the fields of columns 10-16 of the multi-sample vcf file) are due to the presence of a reference allele or to a missing alignment. In the first case we replace them with a reference genotype (namely "0") otherwise we keep the missing genotype (".") record. For this purpose, we use an R script stored in the "script" folder.
+
+```
+Rscript scripts/check-non-alt.R $(pwd)
+```
 
 ## Graph construction and variant calls
