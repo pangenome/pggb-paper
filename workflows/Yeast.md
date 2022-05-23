@@ -13,7 +13,7 @@ All the input sequences are provided in the "genomes" folder while the correspon
 The structure of the "genomes" folder is:
 
 ```
-genomes/
+genomes
 ├── collinear
 ├── rearranged
 └── reference
