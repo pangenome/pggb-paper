@@ -10,8 +10,7 @@ All the input data are provided in the "data" folder. All the scripts need to ru
 
 ## Data
 
-The tree of the "data" folder is:
-.\
+The tree of the "data" folder is:\
 ├── annotations\
 │   ├── mitochondrial\
 │   └── nuclear\
