@@ -17,10 +17,6 @@ def get_extract_loci(wildcards):
 rule all:
     input:
         get_extract_loci
-        #"data/out.chr6.10000/multiqc_config.yaml",
-        #"data/out.chr7.10000/multiqc_config.yaml"
-        #"data/chr7.input.fa.gz",
-        #"data/chr6.input.fa.gz"
 
 
 rule extract_locus:
@@ -32,8 +28,8 @@ rule extract_locus:
         subgraph="data/{contig}/{target}/{target}.og",
         sorted_subgraph="data/{contig}/{target}/{target}.sorted.og"
     run:
-        pggb_path="/global/scratch2/psudmant/software/pggp/pggb_curr"
-        PWD="/global/scratch2/psudmant/projects/pggb/pggb_primate_example"
+        pggb_path=config['pggb_path']
+        PWD=config['PWD'] 
         locus = config["extract_loci"][wildcards.target]["locus"] 
         graph = config["extract_loci"][wildcards.target]["graph"] 
         
@@ -79,8 +75,10 @@ rule run_pggb:
     output:
         out="data/out.{contig}.{seg_len}/multiqc_config.yaml"
     run:
-        pggb_path="/global/scratch2/psudmant/software/pggp/pggb_curr"
-        PWD="/global/scratch2/psudmant/projects/pggb/pggb_primate_example"
+
+        pggb_path=config['pggb_path']
+        PWD=config['PWD'] 
+
         outdir = "data/out.{contig}.{seg_len}".format(contig=wildcards.contig,
                                                       seg_len=wildcards.seg_len) 
         cmd = ("singularity "

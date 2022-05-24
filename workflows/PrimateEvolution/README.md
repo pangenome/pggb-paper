@@ -156,11 +156,87 @@ We build the pangenome graph using the singularity image of the PGGB. Complete i
 
 ```
 
-## Graph statistics
-...
-
 
 ## Analyses
+We are now ready to analyze our genomes! Let's begin by vizualizing our loci of interest. We do this using several ODGI commands. First we need to extract subgraphs at our locus of interest (`odgi extact`). We can use the genome coordinates from any of our references (see below). We then need to resort this subgraph (`odgi sort`). Finally, we can use `odgi viz` to vizualize these subgraphs. 
+
+```
+    "extract_loci":{
+
+        "SAMD9_Clint":{
+            "graph":"data/out.chr7.10000/chr7.input.fa.gz.e6f73d2.e34d4cd.20398a9.smooth.final.og",
+            "graph_path":"out.chr7.10000",
+            "locus":"Clint_PTRv2#NC_036886.1:89120280-89210088"
+        },
+
+        "SAMD9_GRC38":{
+            "graph":"data/out.chr7.10000/chr7.input.fa.gz.e6f73d2.e34d4cd.20398a9.smooth.final.og",
+            "graph_path":"out.chr7.10000",
+            "locus":"GRC38#CM000669.2:93060633-93150835"
+        },
+        "HLA_GRC38":{
+            "graph":"data/out.chr6.10000/chr6.input.fa.gz.e6f73d2.e34d4cd.20398a9.smooth.final.og",
+            "graph_path":"out.chr6.10000",
+            "locus":"GRC38#CM000668.2:29657092-33192467"
+        }
+
+    }
+```
+Rules for using ODGI to extract, sort, and vizualize specific loci of our pangenomes
+```
+	rule extract_locus:
+		input:
+			"data/out.chr6.10000/multiqc_config.yaml",
+			"data/out.chr7.10000/multiqc_config.yaml"
+		output:
+			png="data/{contig}/{target}/{target}.sorted.png",
+			subgraph="data/{contig}/{target}/{target}.og",
+			sorted_subgraph="data/{contig}/{target}/{target}.sorted.og"
+		run:
+			pggb_path=config['pggb_path']
+			PWD=config['PWD'] 
+			locus = config["extract_loci"][wildcards.target]["locus"] 
+			graph = config["extract_loci"][wildcards.target]["graph"] 
+			
+			cmd = ("singularity "
+				   "run -B {PWD}/data:/data "
+				   "-H {PWD} "
+				   "{pggb_path} "
+				   "\"odgi extract -E -i /{graph} -o /{subgraph} -r {locus}\""
+				   "".format(pggb_path=pggb_path,
+							 PWD=PWD,
+							 locus=locus,
+							 graph=graph,
+							 subgraph=output.subgraph))
+			shell(cmd)
+			cmd = ("singularity "
+				   "run -B {PWD}/data:/data "
+				   "-H {PWD} "
+				   "{pggb_path} "
+				   "\"odgi sort -O -Y -i /{subgraph} -o /{sorted_subgraph}\""
+				   "".format(pggb_path=pggb_path,
+							 PWD=PWD,
+							 subgraph=output.subgraph,
+							 sorted_subgraph=output.sorted_subgraph))
+			shell(cmd)
+
+			cmd = ("singularity "
+				   "run -B {PWD}/data:/data "
+				   "-H {PWD} "
+				   "{pggb_path} "
+				   "\"odgi viz -i /{sorted_subgraph} -o /{png}\""
+				   "".format(pggb_path=pggb_path,
+							 PWD=PWD,
+							 sorted_subgraph=output.sorted_subgraph,
+							 png=output.png))
+			shell(cmd)
+
+```
+Results of our vizualization. Note that we have extracted the subgraph of the SAMD9 locus using the human linear genome coordinates and the chimpanzee linear genome coordinates with identical results.  
+
 ![An ODGI viz visualization of the SAMD9 locus extracted from the Clint](data/out.chr7.10000/SAMD9_Clint/SAMD9_Clint.sorted.png)
 ![An ODGI viz visualization of the SAMD9 locus extracted against GRC38](data/out.chr7.10000/SAMD9_GRC38/SAMD9_GRC38.sorted.png)
 ![An ODGI viz visualization of the HLA locus](data/out.chr6.10000/HLA_GRC38/HLA_GRC38.sorted.png)
+
+
+
