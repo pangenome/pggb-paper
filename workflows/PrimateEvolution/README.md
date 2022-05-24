@@ -7,61 +7,60 @@ Four high-quality primate genomes were selected for this analysis: GRC38 (Human)
 
 
 ```
-"assemblies":{
-	"GRC38":{
-		"genbank_accession":"GCA_000001405.28",
-		"species":"human",
-		"fn_fna":"GCA_000001405.28_GRCh38.p13_genomic.fna.gz",
-		"fn_ftp":"https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/GCA_000001405.28_GRCh38.p13/GCA_000001405.28_GRCh38.p13_genomic.fna.gz",
-	},
-	"Clint_PTRv2":{
-		"genbank_accession":"GCA_002880755.3",
-		"species":"chimp",
-		"fn_fna":"GCF_002880755.1_Clint_PTRv2_genomic.fna.gz",
-		"fn_ftp":"https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/002/880/755/GCF_002880755.1_Clint_PTRv2/GCF_002880755.1_Clint_PTRv2_genomic.fna.gz"
-	},
-	"Mhudiblu_PPA_v2":{
-		"genbank_accession":"GCA_013052645.3",
-		"species":"bornean_orangutan",
-		"fn_fna":"GCA_013052645.3_Mhudiblu_PPA_v2_genomic.fna.gz",
-		"fn_ftp":"https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/013/052/645/GCA_013052645.3_Mhudiblu_PPA_v2/GCA_013052645.3_Mhudiblu_PPA_v2_genomic.fna.gz"
-	},
-	"Kamilah_GGO_v0":{
-		"genbank_accession":"GCA_008122165.1",
-		"species":"gorilla",
-		"fn_fna":"GCA_008122165.1_Kamilah_GGO_v0_genomic.fna.gz",
-		"fn_ftp":"https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/008/122/165/GCA_008122165.1_Kamilah_GGO_v0/GCA_008122165.1_Kamilah_GGO_v0_genomic.fna.gz"
-	},
-}
+	"assemblies":{
+		"GRC38":{
+			"genbank_accession":"GCA_000001405.28",
+			"species":"human",
+			"fn_fna":"GCA_000001405.28_GRCh38.p13_genomic.fna.gz",
+			"fn_ftp":"https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/GCA_000001405.28_GRCh38.p13/GCA_000001405.28_GRCh38.p13_genomic.fna.gz",
+		},
+		"Clint_PTRv2":{
+			"genbank_accession":"GCA_002880755.3",
+			"species":"chimp",
+			"fn_fna":"GCF_002880755.1_Clint_PTRv2_genomic.fna.gz",
+			"fn_ftp":"https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/002/880/755/GCF_002880755.1_Clint_PTRv2/GCF_002880755.1_Clint_PTRv2_genomic.fna.gz"
+		},
+		"Mhudiblu_PPA_v2":{
+			"genbank_accession":"GCA_013052645.3",
+			"species":"bornean_orangutan",
+			"fn_fna":"GCA_013052645.3_Mhudiblu_PPA_v2_genomic.fna.gz",
+			"fn_ftp":"https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/013/052/645/GCA_013052645.3_Mhudiblu_PPA_v2/GCA_013052645.3_Mhudiblu_PPA_v2_genomic.fna.gz"
+		},
+		"Kamilah_GGO_v0":{
+			"genbank_accession":"GCA_008122165.1",
+			"species":"gorilla",
+			"fn_fna":"GCA_008122165.1_Kamilah_GGO_v0_genomic.fna.gz",
+			"fn_ftp":"https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/008/122/165/GCA_008122165.1_Kamilah_GGO_v0/GCA_008122165.1_Kamilah_GGO_v0_genomic.fna.gz"
+		},
+	}
 ```
 We download and index these fastqs using the following rules
 ```
 
-rule download:
-    output:
-        fa_gz_out="data/input_genomes/{g}/{fn_fna}.fna.gz"
-    run:
-        ftp_path = config['assemblies'][wildcards.g]["fn_ftp"]
-        shell("wget -O {fn_out} {ftp_path}".format(fn_out=output.fa_gz_out,
-                                                   ftp_path=ftp_path))
+	rule download:
+		output:
+			fa_gz_out="data/input_genomes/{g}/{fn_fna}.fna.gz"
+		run:
+			ftp_path = config['assemblies'][wildcards.g]["fn_ftp"]
+			shell("wget -O {fn_out} {ftp_path}".format(fn_out=output.fa_gz_out,
+													   ftp_path=ftp_path))
 
-rule idx_fa:
-    input:
-        get_fa
-    output:
-        idx_out="data/input_genomes/{g}/{fn_fna}.fna.gz.fai"
-    run:
-        fa_gz = input[0]
-        fa = fa_gz.replace(".gz","")
-        shell("gunzip {fa_gz_in}".format(fa_gz_in=fa_gz))
-        shell("bgzip {fa_gz_in}".format(fa_gz_in=fa))
-        shell("samtools faidx {fa_bz_out}".format(fa_bz_out=fa_gz))
+	rule idx_fa:
+		input:
+			get_fa
+		output:
+			idx_out="data/input_genomes/{g}/{fn_fna}.fna.gz.fai"
+		run:
+			fa_gz = input[0]
+			fa = fa_gz.replace(".gz","")
+			shell("gunzip {fa_gz_in}".format(fa_gz_in=fa_gz))
+			shell("bgzip {fa_gz_in}".format(fa_gz_in=fa))
+			shell("samtools faidx {fa_bz_out}".format(fa_bz_out=fa_gz))
                                     
 ```
 
 
-
-## Pangenome Sequence Naming
+## Pangenome Sequence Naming and Partitioning
 The two loci we are interested (SAMD9 and HLA) reside on chr7 and chr6 respectively. We thus extract these homologous chromosomes (termed "communities" below) and create individual fastas for each. 
 
 ```
@@ -82,20 +81,80 @@ The two loci we are interested (SAMD9 and HLA) reside on chr7 and chr6 respectiv
         }
     }
 ```
-...
+Rules to extract the loci of interest and concatenate them into a properly named input.
+```
+
+	"""
+	https://github.com/pangenome/PanSN-spec
+	uses this hack https://github.com/ekg/fastix
+	"""
+	rule make_input_fa:
+		input:
+			get_fa_idxs
+		output:
+			fa_out="data/{contig}.input.fa.gz"
+		run:
+			fastix="/global/home/users/psudmant/code/fastix/target/debug/fastix"
+			shell("> {fa_out}".format(fa_out=output.fa_out.replace(".gz","")))
+			assemblies = config['contig_communities']['asssembly_order']
+			for i, contig in enumerate(config['contig_communities']['communities'][wildcards.contig]):
+				curr_assembly = assemblies[i] 
+				fn_fa=config['assemblies'][curr_assembly]['fn_fna']
+				shell("samtools faidx "
+					  "data/input_genomes/{g}/{fn_fa} "
+					  "{contig} | "
+					  "{fastix} "
+					  "--prefix {g}# "
+					  "/dev/stdin "
+					  ">>{fa_out}"
+					  "".format(fn_fa=fn_fa,
+								fastix=fastix,
+								contig=contig,
+								g=curr_assembly,
+								fa_out=output.fa_out.replace(".gz","")))
+			shell("bgzip {fa_out}".format(fa_out = output.fa_out.replace(".gz","")))
+			shell("samtools faidx {fa_out}".format(fa_out = output.fa_out))
 
 
-## Sequence partitioning
-...
-
+```
 
 ## Divergence estimation
-...
-
+In the case of these primates we know the relative divergences with the most recent common ancestor ~10 million years ago and a maximum divergence of ~3.5% genome wide. We thus set ourdivergence conservatively at 5%. 
 
 ## Pangenome graph building
-...
+We build the pangenome graph using the singularity image of the PGGB. Complete instructions on using singularity with docker images can be found [here](https://github.com/pangenome/pggb#singularity). The rule build
 
+```
+	rule run_pggb:
+		input:
+			fa_input="data/{contig}.input.fa.gz"
+		output:
+			out="data/out.{contig}.{seg_len}/multiqc_config.yaml"
+		run:
+			pggb_path=config['pggb_path']
+			PWD=config['PWD'] 
+			outdir = "data/out.{contig}.{seg_len}".format(contig=wildcards.contig,
+														  seg_len=wildcards.seg_len) 
+			cmd = ("singularity "
+				   "run -B {PWD}/data:/data "
+				   "-H {PWD} "
+				   "{pggb_path} "
+				   "\"pggb -i /{fa_input} "
+				   "-p 95 "
+				   "-s {seg_len} "
+				   "-n 4 "
+				   "-t 24 "
+				   "-o /{outdir} "
+				   #"-M -C cons,100,1000,10000 -m\""
+				   "-M -m\""
+				   "".format(pggb_path=pggb_path,
+							 fa_input = input.fa_input,
+							 seg_len = wildcards.seg_len,
+							 outdir=outdir,
+							 PWD=PWD))
+			shell(cmd)
+
+```
 
 ## Graph statistics
 ...

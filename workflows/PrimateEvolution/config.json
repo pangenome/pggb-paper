@@ -1,5 +1,8 @@
 {
-   
+
+	"pggb_path" = "/global/scratch2/psudmant/software/pggp/pggb_curr",
+	"PWD" = "/global/scratch2/psudmant/projects/pggb/pggb_primate_example",
+
     "extract_loci":{
     
         "SAMD9_Clint":{
