@@ -253,6 +253,103 @@ Rscript scripts/check-non-alt.R $(pwd)
 ```
 ## Variants stratification
 
+Calling variants in some specific regions of a genome can be particularly difficult due to the presence of repeated sequences. Here, we use RepeatMasker to make a bed files with easy and hard regions. Plus, we add any region corresponding to the following annotations in the gff file of the SGD reference genome: "CEN" (centromeres), "X_element" and "Y_prime_element" (X and Y' elements respectively), "TY" (yeast transposable elements), and "soloLTR" (solo long terminal repeats).
+
+```
+## settings -------------------------------------------------------------------
+
+### base dir
+dir_base=$(pwd)
+
+### stratification folders
+dir_out="${dir_base}/rep-mask"
+
+### other variables
+ref_id="SGDref-hc"
+ref_gz="${ref_id}-genome.fa.gz"
+ref_fa="${ref_id}-genome.fa"
+ref_path="${dir_base}/genomes/reference/${ref_fa}"
+feat_gff="${dir_base}/annotations/${ref_id}-features.gff"
+
+### clean working folder
+if [[ -d "${dir_out}" ]]; then
+  rm -rf "${dir_out}"
+fi
+mkdir -p "${dir_out}"
+
+## clmnt ----------------------------------------------------------------------
+
+# to run RepeatMasker (default ReapeatMasker), with also the MT genome
+RepeatMasker -species fungi -xsmall -gff "${ref_path}" -dir "${dir_out}"
+
+### format the gff (version 2)
+cd "${dir_out}"
+grep -v "^#" "SGDref-hc-genome.fa.out.gff" | \
+sed 's|RepeatMasker|SGDref|g' | \
+sed 's|Target |Target=|g' | sed 's|"||g' \
+> "reg-mask.gff"
+
+### how many bp were masked by RepeatMasker
+echo "Number of bp masked by RepeatMasker:"
+grep -v "^#" "reg-mask.gff" \
+| cut -f 4,5 \
+| awk 'BEGIN {FS="\t"} { sum += $2-$1 } END {print sum}'
+
+### get hard features from the gff file of SGD (both nuclear and MT)
+### things to be extracted from the annotation of SGD
+### and marked as hard regions:
+### CEN
+### X_element
+### Y_prime_element
+### TY
+### [S/s]olo_LTR
+grep "^#" "${feat_gff}" > "feat-hard.gff"
+str_feat="CEN X_element Y_prime_element TY oloLTR"
+for ind_s in ${str_feat}; do
+  grep "${ind_s}" ${feat_gff} >> "feat-hard.gff"
+done
+
+### how many bp were masked by feature-selection
+echo "Number of bp found in hard-feature regions:"
+grep -v "^#" "feat-hard.gff" \
+| cut -f 4,5 \
+| awk 'BEGIN {FS="\t"} { sum += $2-$1 } END {print sum}'
+
+### compare the two sets: overlap in bp
+echo "Overlap between masked and hard-feature regions:"
+bedtools intersect -a "feat-hard.gff" \
+-b "reg-mask.gff" | \
+awk 'BEGIN {FS="\t"} { sum += $5-$4 } END { print sum }'
+
+### merge the two gff
+cat "feat-hard.gff" "reg-mask.gff" \
+> "reg-hard.gff"
+
+### sort
+all_chr="chrI chrII chrIII chrIV chrV chrVI chrVII chrVIII \
+chrIX chrX chrXI chrXII chrXIII chrXIV chrXV chrXVI chrMT"
+grep "^#" "reg-hard.gff" > "reg-hard-srt.gff"
+for ind_c in ${all_chr}; do
+  grep -w "${ind_c}" "reg-hard.gff" | \
+  sort -k 4,4n >> "reg-hard-srt.gff"
+done
+
+### convert the gff to bed and merge
+### (i.e. remove overlapping features) the intervals
+cut -f 1,4,5 "reg-hard-srt.gff" | bedtools merge > "reg-hard-srt-mrg.bed"
+
+### count the bp of the final bed (no overlapping feature is left)
+echo "Number of bp in hard regions \
+(no overlap between masked regions and hard-feature regions):"
+awk 'BEGIN {FS="\t"} {sum += $3-$2} END {print sum}' "reg-hard-srt-mrg.bed"
+
+### now we calculate the easy regions
+all_reg_bed="all-reg.bed"
+awk 'BEGIN {FS="\t"} {OFS="\t"} {print $1,1,$2}' "${ref_path}.fai" \
+> "${all_reg_bed}"
+bedtools subtract -a "${all_reg_bed}" -b "reg-hard-srt-mrg.bed" \
+> "reg-easy-srt-mrg.bed"
+```
 
 ## Graph construction and variant calls
 
