@@ -6,7 +6,7 @@ In this tutorial we will use the *S. cerevisiae* SGD reference genome and 7 yeas
 
 The bi-allelic SNVs called from the variation graph will be compared to those obtained from the pairwise alignments of each the 7 genomes against the SGD reference. The latter will be used as the ground truth to calculate precision, recall, as well as the F1-score. Moreover, the ground truth will be stratified in two types of variants: those lying is "easy" regions and those lying in "hard regions". The latter include genomic regions which are repeated or features, such as Tys (yeast transposable elements), which are known to be repeated.
 
-All the input sequences are provided in the "genomes" folder while the corresponding annotations are stored in the "annotations" folder. All the scripts needed to run the analysis are stored in the "scripts" folder.
+All the input sequences are provided in the "genomes" folder while the corresponding annotations are stored in the "annotations" folder. All the scripts needed to run the analysis are stored in the "scripts" folder. Make sure to "cd" to the main folder of the repository before running the command lines reported below.
 
 ## Data
 
@@ -46,7 +46,7 @@ git clone -b yeast https://github.com/pangenome/pggb-paper.git
 
 ## Variant call from the linear genomes
 
-Here, we align the SGD genome against any other assembly. Before running the following bash lines, "cd" to the main folder of the yeast repository. This chunk produces the *-coords.txt and *-var.txt for each of the genomes aligned against SGD. The former is the file  with the detected variants while the latter is the file reporting the alignments. Both files can be found in the "nuc-aln" folder which has been created in the main folder of the repository.
+Here, we align the SGD genome against any other assembly. Before running the following bash lines, "cd" to the main folder of the yeast repository. This chunk of code produces the *-coords.txt and *-var.txt for each of the genomes aligned against SGD. The former is the file  with the detected variants while the latter is the file reporting the alignments. Both files can be found in the "nuc-aln" folder which has been created in the main folder of the repository.
 
 ```
 ## settings -------------------------------------------------------------------
@@ -238,7 +238,7 @@ all_files=( $(find . -name "*vcf.gz") )
 bcftools merge --output-type z --threads "${n_threads}" ${all_files[@]} \
 > "${dir_out}/multis-snps.vcf.gz"
 
-### prepare header for the next chunk
+### prepare header for the next chunk of code
 bgzip -b -c "${dir_out}/multis-snps.vcf.gz" | grep "^#" \
 > "${dir_out}/multis-snps-genfix.vcf"
 
@@ -253,6 +253,9 @@ Rscript scripts/check-non-alt.R $(pwd)
 ```
 ## Variants stratification
 
-Only "callable" variants are taken into account.
 
 ## Graph construction and variant calls
+
+## Calculation of precision, recall (sensitivity), and  the F-score
+
+Only "callable" positions are taken into account.
