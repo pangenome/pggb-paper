@@ -3,6 +3,10 @@
 The goal of this workflow is to perform comparative evolutionary analyses on several priamte genomes. Specifically, we will be exploring two loci that are of interest to primate immunity (SAMD9 and HLA). A self-contained Snakemake file and configfile are also included for reference. These use Singularity to run the docker image of pggb.   
 
 ## Data collection
+Four high-quality primate genomes were selected for this analysis: GRC38 (Human), Clint (Chimpanzee), Mhudiblu (Orangutan), and Kamilah (Gorilla).
+Genome accessions and ftp links are shown below.  
+Reference genomes were all downloaded from ncbi at these links.  
+
 
 ```
 "assemblies":{
