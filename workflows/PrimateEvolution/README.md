@@ -34,11 +34,54 @@ Four high-quality primate genomes were selected for this analysis: GRC38 (Human)
 	},
 }
 ```
+We download and index these fastqs using the following rules
+```
 
-...
+rule download:
+    output:
+        fa_gz_out="data/input_genomes/{g}/{fn_fna}.fna.gz"
+    run:
+        ftp_path = config['assemblies'][wildcards.g]["fn_ftp"]
+        shell("wget -O {fn_out} {ftp_path}".format(fn_out=output.fa_gz_out,
+                                                   ftp_path=ftp_path))
+
+rule idx_fa:
+    input:
+        get_fa
+    output:
+        idx_out="data/input_genomes/{g}/{fn_fna}.fna.gz.fai"
+    run:
+        fa_gz = input[0]
+        fa = fa_gz.replace(".gz","")
+        shell("gunzip {fa_gz_in}".format(fa_gz_in=fa_gz))
+        shell("bgzip {fa_gz_in}".format(fa_gz_in=fa))
+        shell("samtools faidx {fa_bz_out}".format(fa_bz_out=fa_gz))
+                                    
+```
+
 
 
 ## Pangenome Sequence Naming
+The two loci we are interested (SAMD9 and HLA) reside on chr7 and chr6 respectively. We thus extract these homologous chromosomes (termed "communities" below) and create individual fastas for each. 
+
+```
+    "contig_communities":{
+        "asssembly_order":["GRC38",
+                           "Clint_PTRv2",
+                           "Mhudiblu_PPA_v2",
+                           "Kamilah_GGO_v0"],
+        "communities":{
+            "chr6": ["CM000668.2",
+                     "NC_036885.1",
+                     "CM023033.3",
+                     "CM017853.1"],
+            "chr7": ["CM000669.2",
+                     "NC_036886.1",
+                     "CM023034.3",
+                     "CM017854.1"]
+        }
+    }
+```
 ...
 
 
