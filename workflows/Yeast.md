@@ -38,10 +38,11 @@ The following command-line tools and R packages are required:
 
 ## Clone the yeast repository
 
-First, we have to clone the yeast repository.
+First, we have to clone the yeast repository and enter the main directory.
 
 ```
 git clone -b yeast https://github.com/pangenome/pggb-paper.git
+cd pggb-paper
 ```
 
 ## Variant call from the linear genomes
@@ -349,10 +350,77 @@ awk 'BEGIN {FS="\t"} {OFS="\t"} {print $1,1,$2}' "${ref_path}.fai" \
 > "${all_reg_bed}"
 bedtools subtract -a "${all_reg_bed}" -b "reg-hard-srt-mrg.bed" \
 > "reg-easy-srt-mrg.bed"
+
+### back to the main folder
+cd "${dir_base}"
 ```
 
 ## Graph construction and variant calls
 
+Now we need to use pggb to build a variation graph and call variants.
+
+```
+## settings -------------------------------------------------------------------
+
+### base dir
+dir_base=$(pwd)
+
+### variables
+multifasta_dir="${dir_base}/fastas"
+ref_gen="SGDref"
+seg_length=2000
+pair_div=95
+n_aps=$(find genomes/ -name *fa | wc -l)
+n_threads=8
+poa_target_length=7919,8069
+ref_strain=$(echo "${ref_gen}" | cut -d "-" -f 1)
+
+## clmnt ----------------------------------------------------------------------
+
+### cleaning
+if [[ -d "${multifasta_dir}" ]]; then
+  rm -r "${multifasta_dir}"
+fi
+mkdir "${multifasta_dir}"
+cd "${multifasta_dir}"
+
+### make a properly formatted multifasta, compress, and index
+for ind_fa in $(find "${dir_base}/genomes" -name *fa); do
+  strain_id=$(basename "${ind_fa}" | cut -f 1,2 -d "-") # e.g. ADE-hc
+  awk '/^>/ { print ">'${strain_id}'-"substr($1, 2); } \
+  $0 !~ />/ {print toupper($0)}' < "${ind_fa}" >> multisaccha.fa
+done
+bgzip multisaccha.fa
+samtools faidx multisaccha.fa.gz
+
+### set the reference for variant calling and run pggb
+ref_strain=$(echo "${ref_gen}" | cut -d "-" -f 1)
+docker run -it -v "${multifasta_dir}":/data ghcr.io/pangenome/pggb:latest \
+"pggb -i /data/multisaccha.fa.gz -s ${seg_length} \
+-p ${pair_div} -n ${n_aps} -t ${n_threads} \
+-G ${poa_target_length} -o /data/pggb-out -V '${ref_strain}:-'"
+
+### back to the main folder
+cd "${dir_base}"
+```
+
+The output from pggb (including the vcf file, multisaccha.fa.gz.*.smooth.final.SGDref.vcf) is stored in the "fastas/pggb-out" folder.
+
 ## Calculation of precision, recall (sensitivity), and  the F-score
 
-Only "callable" positions are taken into account.
+Now we can calculate the F-score using the nucmer calls as a ground truth. Only "callable" positions are taken into account. A locus is callable if it closer than 1 kb to a variant.
+
+```
+## settings -------------------------------------------------------------------
+
+### set variables
+n_ploidy=1
+n_threads=8
+### distance for callable variants
+dist=1000
+
+### ground truth folder
+dir_gt=$(pwd)
+gt_file_name="multis-snps-genfix.vcf"
+gt_vcf="${dir_gt}/ms-vcf/${gt_file_name}"
+```
