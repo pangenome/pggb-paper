@@ -13,7 +13,7 @@ PREFIX=$(basename "$PATH_GFA" .gfa)
 
 echo "Extracting FASTA file"
 PATH_SEQUENCES_FA="$PREFIX".fa
-odgi paths -i "$PATH_GFA" -f | bgzip -c -@ "$THREADS" > "$PATH_SEQUENCES_FA".gz
+odgi paths -i "$PATH_GFA" -t "$THREADS" -f | bgzip -c -@ "$THREADS" > "$PATH_SEQUENCES_FA".gz
 samtools faidx "$PATH_SEQUENCES_FA".gz
 
 echo "--- Take reference sequences"
@@ -22,7 +22,7 @@ samtools faidx "$PREFIX".fa.gz "$(grep "$PREFIX_REFERENCE" "$PREFIX".fa.gz.fai |
 
 echo "Identify variants with vg"
 
-echo "--- Call variants for each haplotype"
+echo "--- Call variants by haplotype"
 # TO FIX: vg deconstruct does not support that mode yet
 
 PATH_SED_GFA="$PREFIX".sed.gfa
