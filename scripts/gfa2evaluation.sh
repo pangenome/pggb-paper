@@ -2,8 +2,17 @@
 
 # This assumes names following the PanSN-spec
 
+# Example:
+#   bash ~/pggb-paper/scripts/gfa2evaluation.sh \
+#     /lizardfs/guarracino/day2_hsapiens/graphs/chr20.pan/chr20.pan.fa.gz.254a7b3.04f1c29.5486fb6.smooth.final.gfa \
+#     chm13 \
+#     out \
+#     ~/tools/pggb/scripts/vcf_preprocess.sh \
+#     ~/tools/pggb/scripts/nucmer2vcf.R \
+#     48
+
 PATH_GFA=$1
-PREFIX_REFERENCE=$2 #chm13
+PREFIX_REFERENCE=$2
 DIR_OUTPUT=$3
 PATH_VCF_PREPROCESS=$4
 PATH_NUCMER_2_VCF=$5
@@ -18,7 +27,7 @@ samtools faidx "$PATH_SEQUENCES_FA".gz
 
 echo "--- Take reference sequences"
 PATH_REF_FA="$PREFIX"."$PREFIX_REFERENCE".fa
-samtools faidx "$PREFIX".fa.gz "$(grep "$PREFIX_REFERENCE" "$PREFIX".fa.gz.fai | cut -f 1)" > "$PATH_REF_FA"
+samtools faidx "$PREFIX".fa.gz "$(grep "$PREFIX_REFERENCE""#" "$PREFIX".fa.gz.fai | cut -f 1)" > "$PATH_REF_FA"
 
 echo "Identify variants with vg"
 
