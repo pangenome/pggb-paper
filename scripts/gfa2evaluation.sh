@@ -81,8 +81,8 @@ cut -f 1 "$PATH_SEQUENCES_FA".gz.fai | grep "$PREFIX_REFERENCE" -v | while read 
   echo "$CONTIG"
 
   PREFIX=nucmer/"$CONTIG"
-  show-snps -THC "$PREFIX".delta > "$PREFIX".var.txt
-  #show-snps -TH $PREFIX.delta | cut -f 1-6,9-12 > $PREFIX.var.txt # For taking also variants from ambiguous alignments
+  #show-snps -THC "$PREFIX".delta > "$PREFIX".var.txt
+  show-snps -TH "$PREFIX".delta | cut -f 1-6,9-12 > "$PREFIX".var.txt # For taking also variants from ambiguous alignments
 
   # Check if there are variants
   if [[ $(wc -l "$PREFIX".var.txt | cut -f 1 -d\ ) != 0 ]]; then
@@ -128,7 +128,7 @@ echo "Variant evaluation"
 echo "--- Prepare the reference in SDF format"
 rtg format -o "$PATH_REF_FA".sdf "$PATH_REF_FA"
 
-echo "--- Compare nucmer-based SNVs with PGGB-based SVss"
+echo "--- Compare nucmer-based SNVs with PGGB-based SNVs"
 grep '#CHROM' "$PATH_VCF" -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPLO; do
   echo "$HAPLO"
 
