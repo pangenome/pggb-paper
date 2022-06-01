@@ -61,7 +61,7 @@ cut -f 1 "$PATH_SEQUENCES_FA".gz.fai | grep "$PREFIX_REFERENCE" -v | while read 
 
   PREFIX=nucmer/"$CONTIG"
   samtools faidx "$PATH_SEQUENCES_FA".gz "$CONTIG" > "$PREFIX".fa
-  \time -v nucmer "$PATH_REF_FA" "$PREFIX".fa --prefix "$PREFIX"
+  \time -v nucmer "$PATH_REF_FA" "$PREFIX".fa --prefix "$PREFIX" -t "$THREADS"
 done
 
 echo "--- Generate VCF files"
