@@ -13,7 +13,7 @@ PREFIX=$(basename "$PATH_GFA" .gfa)
 
 echo "Extracting FASTA file"
 PATH_SEQUENCES_FA="$PREFIX".fa
-odgi paths -i "$PATH_GFA" -f | bgzip -c -@ "THREADS" > "$PATH_SEQUENCES_FA"
+odgi paths -i "$PATH_GFA" -f | bgzip -c -@ "$THREADS" > "$PATH_SEQUENCES_FA"
 samtools faidx "$PATH_SEQUENCES_FA".gz
 
 echo "--- Take reference sequences"
