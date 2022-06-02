@@ -19,7 +19,7 @@ genomes
 └── reference
 ```
 
-The genomes are organised using *a priori* knowledge (as reported in Yue *et al.*). Remarkably, collinear genomes (with respect to the reference genome "SGDref") are aligned against SGDref chromosome-by-chromosome (since this may increase the number of SNPs detected as reported in Tattini *et al.* [Tattini L, …, A & Liti G. Accurate tracking of the mutational landscape of diploid hybrid genomes. MOL BIOL EVOL. 2019.]). On the contrary genomes bearing rearrangements are compared against SGDref with a whole-genome alignment.
+The genomes are organised using *a priori* knowledge (as reported in Yue *et al.*). Remarkably, collinear genomes (with respect to the reference genome "SGDref") are aligned against SGDref chromosome-by-chromosome (since this may increase the number of SNPs detected as reported in Tattini *et al.* [Tattini L, ..., & Liti G. Accurate tracking of the mutational landscape of diploid hybrid genomes. MOL BIOL EVOL. 2019.]). On the contrary genomes bearing rearrangements are compared against SGDref with a whole-genome alignment.
 
 The files are already well-formatted for the following scripts. Yeast's chromosomes are encoded with Roman numerals, so e.g. chromosome ten is encoded as "chrX". Nobody likes it but do not ask a yeast geneticist to change it.
 
