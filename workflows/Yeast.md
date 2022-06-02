@@ -406,7 +406,7 @@ cd "${dir_base}"
 
 The output from pggb (including the vcf file, multisaccha.fa.gz.*.smooth.final.SGDref.vcf) is stored in the "fastas/pggb-out" folder.
 
-## Calculation of precision, recall (sensitivity), and  the F-score
+## Calculation of precision, recall (sensitivity), and the F-score
 
 Now we can calculate the F-score using the nucmer calls as a ground truth. Only "callable" positions are taken into account. A locus is callable if it closer than 1 kb to a variant.
 
@@ -423,4 +423,145 @@ dist=1000
 dir_gt=$(pwd)
 gt_file_name="multis-snps-genfix.vcf"
 gt_vcf="${dir_gt}/ms-vcf/${gt_file_name}"
+
+### more data from the graph
+dir_graph="${dir_gt}/fastas/pggb-out"
+graph_name="yeast-pggb"
+graph_ref_id="SGDref-hc"
+strain_id=$(echo "${graph_ref_id}" | cut -d "-" -f 1)
+graph_ref_vcf=$(find "${dir_graph}" -name "*${strain_id}.vcf")
+graph_bial_snps=$(echo "${graph_ref_vcf}" | sed "s|\.vcf$|-bial-snps.vcf|")
+graph_bial_snps_frm=$(echo "${graph_ref_vcf}" | \
+sed "s|\.vcf$|-bial-snps-frm.vcf|")
+
+### output
+dir_out="${dir_gt}/stats-${graph_name}"
+if [[ -d "${dir_out}" ]]; then
+  rm -rf "${dir_out}"
+fi
+mkdir -p "${dir_out}"
+
+### folders for collable variants
+dir_collable="${dir_out}/collable"
+mkdir -p "${dir_collable}"
+
+### more data for rtg and the stratification
+dir_strato="${dir_gt}/rep-mask"
+bed_hard="${dir_strato}/reg-hard-srt-mrg.bed"
+bed_easy="${dir_strato}/reg-easy-srt-mrg.bed"
+ref_fa=$( find "${dir_gt}/genomes/reference" -name *fa)
+dir_sdf=$( echo "${ref_fa}" | sed 's|.fa|-sdf|')
+
+## clmnt ----------------------------------------------------------------------
+
+### get only the biallelic SNPs from the graph vcf file
+grep "^#" "${graph_ref_vcf}" > "${graph_bial_snps}"
+grep -v "^#" "${graph_ref_vcf}" | \
+awk 'BEGIN {FS="\t"} {if ( length($4) == 1 && $4 ~ /[A,T,C,G]/ \
+&& length($5) == 1 && $5 ~ /[A,T,C,G]/) print $0}' >> "${graph_bial_snps}"
+
+### fix the encoding of the reference contigs in the graph-derived vcf
+sed 's|SGDref-hc-||g' "${graph_bial_snps}" \
+> "${graph_bial_snps_frm}"
+
+### fix haplotype information in the header of the graph vcf file:
+samp_graph=$(grep "^#C" "${graph_bial_snps_frm}" | cut -f 10-)
+for ind_g in ${samp_graph}; do
+  sed "s|${ind_g}|${ind_g}-hc|" "${graph_bial_snps_frm}" > "temp.vcf"
+  mv -f "temp.vcf" "${graph_bial_snps_frm}"
+done
+
+### compress and index the vcf files
+bgzip -f -c "${gt_vcf}" > "${gt_vcf}.gz"
+tabix -f "${gt_vcf}.gz"
+bgzip -f -c "${graph_bial_snps_frm}" > "${graph_bial_snps_frm}.gz"
+tabix -f "${graph_bial_snps_frm}.gz"
+
+### collable regions
+file_collable="${dir_collable}/collable.bed"
+bedtools intersect \
+-a <(bedtools merge -d "${dist}" -i "${gt_vcf}.gz") \
+-b <(bedtools merge -d "${dist}" -i "${graph_bial_snps_frm}.gz") \
+> "${file_collable}"
+
+### output folder prefix
+pref_easy="${graph_ref_id}-bial-snps-easy"
+pref_hard="${graph_ref_id}-bial-snps-hard"
+
+all_samples=$(grep "^#C" "${gt_vcf}" | cut -f 10-)
+for ind_s in ${all_samples}; do
+  out_easy="${dir_out}/${pref_easy}-${ind_s}"
+  out_hard="${dir_out}/${pref_hard}-${ind_s}"
+  ### make sdf file for rtg
+  if [[ -d "${dir_sdf}" ]]; then
+    rm -rf "${dir_sdf}"
+  fi
+  rtg format -o "${dir_sdf}" "${ref_fa}"
+
+  ### comparison using rtg: easy regions
+  if [[ -d "${out_easy}" ]]; then
+    rm -rf "${out_easy}"
+  fi
+
+  ### if the interval is (a, b] and the coordinate of a SNPs is "a"
+  ### it will not be considered
+  ### if the coordinate of the SNPs is "b" instead it will be taken into account
+  rtg vcfeval -t "${dir_sdf}" --all-records \
+  -b "${gt_vcf}.gz" -c "${graph_bial_snps_frm}.gz" \
+  --sample-ploidy="${n_ploidy}" --vcf-score-field="QUAL" \
+  --sample="${ind_s}" \
+  --bed-regions="${bed_easy}" -T "${n_threads}" \
+  --evaluation-regions="${file_collable}" \
+  -o "${out_easy}"
+
+  ### comparison using rtg: hard regions
+  if [[ -d "${out_hard}" ]]; then
+    rm -rf "${out_hard}"
+  fi
+  ### if the interval is (a, b] and the coordinate of a SNPs is "a"
+  ### it will not be considered
+  ### if the coordinate of the SNPs is "b" instead it will be taken into account
+  rtg vcfeval -t "${dir_sdf}" --all-records \
+  -b "${gt_vcf}.gz" -c "${graph_bial_snps_frm}.gz" \
+  --sample-ploidy="${n_ploidy}" --vcf-score-field="QUAL" \
+  --sample="${ind_s}" \
+  --bed-regions="${bed_hard}" -T "${n_threads}" \
+  --evaluation-regions="${file_collable}" \
+  -o "${out_hard}"
+done
+
+### a few more lines of bash to put together the results
+cd "${dir_out}"
+
+### easy regions
+grep "Non" *easy*/summary.txt > easy.txt
+cat easy.txt | cut -d "/" -f 1 | cut -d "-" -f 6,7 > 1-easy.txt
+cat easy.txt | cut -d ":" -f 2 | tr -s " " | tr " " "\t" \
+| sed -e 's/^[[:space:]]*//' > 2-easy.txt
+echo -e "Sample\tThreshold\tTrue-pos-baseline\
+\tTrue-pos-call\tFalse-pos\tFalse-neg\
+\tPrecision\tSensitivity\tF-measure" \
+> easy-frm.txt
+paste 1-easy.txt 2-easy.txt >> easy-frm.txt
+cat easy-frm.txt
+
+### hard regions
+grep "Non" *hard*/summary.txt > hard.txt
+cat hard.txt | cut -d "/" -f 1 | cut -d "-" -f 6,7 > 1-hard.txt
+cat hard.txt | cut -d ":" -f 2 | tr -s " " | tr " " "\t" \
+| sed -e 's/^[[:space:]]*//' > 2-hard.txt
+echo -e "Sample\tThreshold\tTrue-pos-baseline\
+\tTrue-pos-call\tFalse-pos\tFalse-neg\
+\tPrecision\tSensitivity\tF-measure" \
+> hard-frm.txt
+paste 1-hard.txt 2-hard.txt >> hard-frm.txt
+cat  hard-frm.txt
+
+### clean
+rm -f easy.txt hard.txt 1-easy.txt 2-easy.txt 1-hard.txt 2-hard.txt
+
+### back to the main folder
+cd "${dir_gt}"
 ```
+
+The results are reported in the "stats-yeast-pggb" folder in two tables (one for the easy regions and one for the hard regions) showing, for each sample, the variant quality threshold used (none in this tutorial), the total number of true positives (i.e. before variant quality filtering), the number of true positives used in the evaluation (after variant quality filter), the number of false positives, the number of false negatives, precision, sensitivity (aka recall), and the F-measure (aka F-score).
