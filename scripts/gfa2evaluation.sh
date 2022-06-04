@@ -21,13 +21,13 @@ THREADS=$6
 PREFIX=$(basename "$PATH_GFA" .gfa)
 
 echo "Extracting FASTA file"
-PATH_SEQUENCES_FA="$PREFIX".fa
-odgi paths -i "$PATH_GFA" -t "$THREADS" -f | bgzip -c -@ "$THREADS" > "$PATH_SEQUENCES_FA".gz
-samtools faidx "$PATH_SEQUENCES_FA".gz
+PATH_SEQUENCES_FA_GZ="$PREFIX".fa.gz
+odgi paths -i "$PATH_GFA" -t "$THREADS" -f | bgzip -c -@ "$THREADS" > "$PATH_SEQUENCES_FA_GZ"
+samtools faidx "$PATH_SEQUENCES_FA_GZ"
 
 echo "--- Take reference sequences"
 PATH_REF_FA="$PREFIX"."$PREFIX_REFERENCE".fa
-samtools faidx "$PREFIX".fa.gz "$(grep "$PREFIX_REFERENCE""#" "$PREFIX".fa.gz.fai | cut -f 1)" > "$PATH_REF_FA"
+samtools faidx "$PATH_SEQUENCES_FA_GZ" "$(grep "$PREFIX_REFERENCE""#" "$PATH_SEQUENCES_FA_GZ".fai | cut -f 1)" > "$PATH_REF_FA"
 
 echo "Identify variants with vg"
 
@@ -65,11 +65,11 @@ NUCMER_VERSION="xxx"
 mkdir -p nucmer
 
 echo "--- Align each contig against the reference"
-cut -f 1 "$PATH_SEQUENCES_FA".gz.fai | grep "$PREFIX_REFERENCE" -v | while read CONTIG; do
+cut -f 1 "$PATH_SEQUENCES_FA_GZ".fai | grep "$PREFIX_REFERENCE" -v | while read CONTIG; do
   echo "$CONTIG"
 
   PREFIX=nucmer/"$CONTIG"
-  samtools faidx "$PATH_SEQUENCES_FA".gz "$CONTIG" > "$PREFIX".fa
+  samtools faidx "$PATH_SEQUENCES_FA_GZ" "$CONTIG" > "$PREFIX".fa
   echo "$PREFIX" >> tmp
 done
 
@@ -96,7 +96,7 @@ echo "--- Merge variants by haplotype"
 grep '#CHROM' "$PATH_VCF" -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPLO; do
   echo "$HAPLO"
 
-  grep "^$HAPLO" "$PATH_SEQUENCES_FA".gz.fai | cut -f 1 | while read CONTIG; do
+  grep "^$HAPLO" "$PATH_SEQUENCES_FA_GZ".fai | cut -f 1 | while read CONTIG; do
     echo "$CONTIG"
 
     PREFIX=nucmer/"$CONTIG"
