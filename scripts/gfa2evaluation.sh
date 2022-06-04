@@ -77,7 +77,7 @@ cat tmp | parallel -j "$THREADS" "nucmer $PATH_REF_FA {}.fa --prefix {}"
 rm tmp
 
 echo "--- Generate VCF files"
-cut -f 1 "$PATH_SEQUENCES_FA".gz.fai | grep "$PREFIX_REFERENCE" -v | while read CONTIG; do
+cut -f 1 "$PATH_SEQUENCES_FA_GZ".fai | grep "$PREFIX_REFERENCE" -v | while read CONTIG; do
   echo "$CONTIG"
 
   PREFIX=nucmer/"$CONTIG"
