@@ -27,7 +27,7 @@ samtools faidx "$PATH_SEQUENCES_FA_GZ"
 
 echo "--- Take reference sequences"
 PATH_REF_FA="$PREFIX"."$PREFIX_REFERENCE".fa
-samtools faidx "$PATH_SEQUENCES_FA_GZ" "$(grep "$PREFIX_REFERENCE""#" "$PATH_SEQUENCES_FA_GZ".fai | cut -f 1)" > "$PATH_REF_FA"
+samtools faidx "$PATH_SEQUENCES_FA_GZ" $(grep "$PREFIX_REFERENCE""#" "$PATH_SEQUENCES_FA_GZ".fai | cut -f 1) > "$PATH_REF_FA"
 
 echo "Identify variants with vg"
 
