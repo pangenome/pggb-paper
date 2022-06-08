@@ -86,9 +86,10 @@ cut -f 1 "$PATH_SEQUENCES_FA_GZ".fai | grep "$PREFIX_REFERENCE" -v | while read 
 
   # Check if there are variants
   if [[ $(wc -l "$PREFIX".var.txt | cut -f 1 -d\ ) != 0 ]]; then
-    Rscript "$PATH_NUCMER_2_VCF" "$PREFIX".var.txt "$CONTIG" "$PATH_REF_FA" "$NUCMER_VERSION" "$PREFIX".vcf
-    bgzip -@ "$THREADS" "$PREFIX".vcf
+    Rscript "$PATH_NUCMER_2_VCF" "$PREFIX".var.txt "$CONTIG" "$PATH_REF_FA" "$NUCMER_VERSION" "$PREFIX".tmp.vcf
+    bcftools sort -m "10G" -T bcftools-sort.XXXXXX "$PREFIX".tmp.vcf | bgzip -@ "$THREADS" -c > "$PREFIX".vcf.gz
     tabix "$PREFIX".vcf.gz
+    rm "$PREFIX".tmp.vcf
   fi
 done
 
