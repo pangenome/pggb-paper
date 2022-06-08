@@ -148,8 +148,8 @@ grep '#CHROM' "$PATH_VCF" -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPLO; d
 done
 
 cd vcfeval
-echo haplotype precision recall f1.score | tr ' ' '\t' > statistics.tsv
-grep None */summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 1,7,8,9 -d ' ' | tr ' ' '\t' >> statistics.tsv
+echo haplotype tp.baseline tp.call fp fn precision recall f1.score | tr ' ' '\t' > statistics.tsv
+grep None */summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 1,3,4,5,6,7,8,9 -d ' ' | tr ' ' '\t' >> statistics.tsv
 cd ..
 
 mkdir -p "$DIR_OUTPUT"
