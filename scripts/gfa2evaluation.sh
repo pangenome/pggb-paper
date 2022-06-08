@@ -46,7 +46,7 @@ PATH_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.vcf
 # Revert names in the VCF files
 grep '^##' "$PATH_VCF" | sed "s/$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g" > x.vcf
 grep '^#CHROM' "$PATH_VCF" | sed 's/-/#/g' >> x.vcf
-grep '^#' "$PATH_VCF" -v | sed "s/$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g" >> x.vcf
+grep '^#' "$PATH_VCF" -v | sed "s/^$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g" >> x.vcf
 mv x.vcf "$PATH_VCF"
 
 echo "--- Take SNVs for each haplotype"
@@ -65,7 +65,7 @@ NUCMER_VERSION="xxx"
 mkdir -p nucmer
 
 echo "--- Align each contig against the reference"
-cut -f 1 "$PATH_SEQUENCES_FA_GZ".fai | grep "$PREFIX_REFERENCE" -v | while read CONTIG; do
+cut -f 1 "$PATH_SEQUENCES_FA_GZ".fai | grep "^${PREFIX_REFERENCE}#" -v | while read CONTIG; do
   echo "$CONTIG"
 
   PREFIX=nucmer/"$CONTIG"
@@ -77,7 +77,7 @@ cat tmp | parallel -j "$THREADS" "nucmer $PATH_REF_FA {}.fa --prefix {}"
 rm tmp
 
 echo "--- Generate VCF files"
-cut -f 1 "$PATH_SEQUENCES_FA_GZ".fai | grep "$PREFIX_REFERENCE" -v | while read CONTIG; do
+cut -f 1 "$PATH_SEQUENCES_FA_GZ".fai | grep "^${PREFIX_REFERENCE}#" -v | while read CONTIG; do
   echo "$CONTIG"
 
   PREFIX=nucmer/"$CONTIG"
