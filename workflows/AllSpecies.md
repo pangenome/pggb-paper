@@ -102,7 +102,7 @@ sbatch -c 48 -p 386mem --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n 
 
 # E. coli
 f=/lizardfs/guarracino/pggb-paper/sequences/ecoli100.fa.gz
-p=90tail
+p=90
 s=5000
 n=100
 k=47
@@ -119,11 +119,25 @@ Evaluation:
 
 
 ```shell
-bash /home/guarracino/pggb-paper/scripts/gfa2evaluation.sh \
-    $out_folder/.../...smooth.final.gfa \
-    chm13 \
-    $ref \
-    /home/guarracino/tools/pggb/scripts/vcf_preprocess.sh \
-    /home/guarracino/tools/pggb/scripts/nucmer2vcf.R \
-    48
+vcfpreprocess=/home/guarracino/tools/pggb/scripts/vcf_preprocess.sh
+nucmer2vcf=/home/guarracino/tools/pggb/scripts/nucmer2vcf.R
+
+
+sbatch -c 48 -p workers --wrap "hostname; cd /scratch && bash /home/guarracino/pggb-paper/scripts/gfa2evaluation.sh /lizardfs/guarracino/pggb-paper/graphs/rat32.chr1_p98.s1000.n32.k271.G4001-4507.rn7/*.final.gfa rn7 /lizardfs/guarracino/pggb-paper/evaluation/rat32.chr1_p98.s1000.n32.k271.G4001-4507.rn7/ $vcfpreprocess $nucmer2vcf 48"
+
+sbatch -c 48 -p workers --wrap "hostname; cd /scratch && bash /home/guarracino/pggb-paper/scripts/gfa2evaluation.sh /lizardfs/guarracino/pggb-paper/graphs/primates4.chr7_p95.s5000.n4.k47.G4001-4507.GRC38/*.final.gfa GRC38 /lizardfs/guarracino/pggb-paper/evaluation/primates4.chr7_p95.s5000.n4.k47.G4001-4507.GRC38/ $vcfpreprocess $nucmer2vcf 48"
+
+sbatch -c 48 -p workers --wrap "hostname; cd /scratch && bash /home/guarracino/pggb-paper/scripts/gfa2evaluation.sh /lizardfs/guarracino/pggb-paper/graphs/athaliana7.chr1_p95.s5000.n7.k47.G4001-4507.TAIR10/*.final.gfa TAIR10 /lizardfs/guarracino/pggb-paper/evaluation/athaliana7.chr1_p95.s5000.n7.k47.G4001-4507.TAIR10/ $vcfpreprocess $nucmer2vcf 48"
+
+sbatch -c 48 -p workers --wrap "hostname; cd /scratch && bash /home/guarracino/pggb-paper/scripts/gfa2evaluation.sh /lizardfs/guarracino/pggb-paper/graphs/soy37.chr18_p95.s5000.n37.k47.G4001-4507.ZH13/*.final.gfa ZH13 /lizardfs/guarracino/pggb-paper/evaluation/soy37.chr18_p95.s5000.n37.k47.G4001-4507.ZH13 $vcfpreprocess $nucmer2vcf 48"
+
+sbatch -c 48 -p workers --wrap "hostname; cd /scratch && bash /home/guarracino/pggb-paper/scripts/gfa2evaluation.sh /lizardfs/guarracino/pggb-paper/graphs/tomato23.chr2_p95.s5000.n23.k47.G4001-4507.SL5/*.final.gfa SL5 /lizardfs/guarracino/pggb-paper/evaluation/tomato23.chr2_p95.s5000.n23.k47.G4001-4507.SL5/ $vcfpreprocess $nucmer2vcf 48"
+
+
+sbatch -c 48 -p workers --wrap "hostname; cd /scratch && bash /home/guarracino/pggb-paper/scripts/gfa2evaluation.sh /lizardfs/guarracino/pggb-paper/graphs/scerevisiae8_p95.s1000.n8.k47.G4001-4507.SGDref/*.final.gfa SGDref /lizardfs/guarracino/pggb-paper/evaluation/scerevisiae8_p95.s1000.n8.k47.G4001-4507.SGDref $vcfpreprocess $nucmer2vcf 48"
+
+sbatch -c 48 -p workers --wrap "hostname; cd /scratch && bash /home/guarracino/pggb-paper/scripts/gfa2evaluation.sh /lizardfs/guarracino/pggb-paper/graphs/scerevisiae8_p95.s5000.n8.k47.G4001-4507.SGDref/*.final.gfa SGDref /lizardfs/guarracino/pggb-paper/evaluation/scerevisiae8_p95.s5000.n8.k47.G4001-4507.SGDref $vcfpreprocess $nucmer2vcf 48"
+
+
+sbatch -c 48 -p workers --wrap "hostname; cd /scratch && bash /home/guarracino/pggb-paper/scripts/gfa2evaluation.sh /lizardfs/guarracino/pggb-paper/graphs/ecoli100_p90.s5000.n100.k47.G4001-4507.BH100N_MG2017_3a53c37/*.final.gfa BH100N_MG2017_3a53c37 /lizardfs/guarracino/pggb-paper/evaluation/ecoli100_p90.s5000.n100.k47.G4001-4507.BH100N_MG2017_3a53c37/ $vcfpreprocess $nucmer2vcf 48"
 ```
