@@ -116,12 +116,13 @@ grep '#CHROM' "$PATH_VCF" -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPLO; d
   rm "$HAPLO".x.txt
 
   #bcftools sort $HAPLO.unsorted.vcf.gz > $HAPLO.vcf.gz # It doesn't work
-  zgrep "^#" nucmer/"$HAPLO".unsorted.vcf.gz > nucmer/"$HAPLO".vcf
-  zgrep -v "^#" nucmer/"$HAPLO".unsorted.vcf.gz | sort -k 1,1V -k 2,2n >> nucmer/"$HAPLO".vcf
+  zgrep "^#" nucmer/"$HAPLO".unsorted.vcf.gz > nucmer/"$HAPLO".tmp.vcf
+  zgrep -v "^#" nucmer/"$HAPLO".unsorted.vcf.gz | sort -k 1,1V -k 2,2n >> nucmer/"$HAPLO".tmp.vcf
+  vcfuniq nucmer/"$HAPLO".tmp.vcf > nucmer/"$HAPLO".vcf
   bgzip -@ 48 nucmer/"$HAPLO".vcf
   tabix nucmer/"$HAPLO".vcf.gz
 
-  rm nucmer/"$HAPLO".unsorted.vcf.gz
+  rm nucmer/"$HAPLO".unsorted.vcf.gz nucmer/"$HAPLO".tmp.vcf
 done
 
 echo "Variant evaluation"
