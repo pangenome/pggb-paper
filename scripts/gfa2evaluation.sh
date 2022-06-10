@@ -47,6 +47,7 @@ PATH_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.vcf
 grep '^##' "$PATH_VCF" | sed "s/$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g" > x.vcf
 grep '^#CHROM' "$PATH_VCF" | sed 's/-/#/g' >> x.vcf
 grep '^#' "$PATH_VCF" -v | sed "s/^$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g" >> x.vcf
+sed -i 's/#0//g' x.vcf # Wrong PanSN-spec management in vg 1.41.0
 mv x.vcf "$PATH_VCF"
 
 echo "--- Take SNVs for each haplotype"
