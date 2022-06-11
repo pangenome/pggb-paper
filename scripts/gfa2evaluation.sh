@@ -42,6 +42,7 @@ sed 's/#/-/' "$PATH_GFA" | sed 's/#/#1#/' > "$PATH_SED_GFA"
 
 PATH_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.vcf
 PATH_WAVED_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.waved.vcf
+PATH_WAVED_FIXED_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.waved.fixed.vcf
 \time -v vg deconstruct -P "$PREFIX_REFERENCE" -H '#' -e -a -t "$THREADS" "$PATH_SED_GFA" > "$PATH_VCF"
 sed -i 's/#0//g' "$PATH_VCF" # Wrong PanSN-spec management in vg 1.41.0
 
@@ -54,6 +55,11 @@ bgzip -@ THREADS $PATH_VCF
 
 vcfbub -l 0 -a 100000 --input "$PATH_VCF".gz | vcfwave -I 1000 -t $THREADS | bgzip -c -@ $THREADS > "$PATH_WAVED_VCF".gz
 
+# The TYPE info sometimes is wrong/missing
+# There are variants without the ALT allele
+bcftools annotate -x INFO/TYPE "$PATH_WAVED_VCF".gz  | awk '$5 != "."' | bgzip -@ THREADS -c > "$PATH_WAVED_FIXED_VCF".gz
+
+
 echo "--- Take SNVs for each haplotype"
 zgrep '#CHROM' "$PATH_VCF".gz -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPLO; do
   echo "$HAPLO"
@@ -64,23 +70,11 @@ zgrep '#CHROM' "$PATH_VCF".gz -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPL
       1 \
       "$PATH_REF_FA"
 
-  MEM="10G"
-  MAXSIZE=1
-  bcftools view -s "$HAPLO" -Ou "$PATH_WAVED_VCF".gz | \
-   bcftools norm -f ${PATH_REF_FA} -c s -m - -Ou | \
-   bcftools view -e 'GT="ref" | GT~"\."' -f 'PASS,.' -Ou | \
-   bcftools sort -m ${MEM} -T bcftools-sort.XXXXXX -Ou | \
-   bcftools norm -d exact -Oz -o "$PREFIX"."$PREFIX_REFERENCE".norm.vcf.gz
-  bcftools index -t "$PREFIX"."$PREFIX_REFERENCE".norm.vcf.gz
-  bcftools view -e "STRLEN(REF)>${MAXSIZE} | STRLEN(ALT)>${MAXSIZE}" -Oz -o "$PREFIX"."$PREFIX_REFERENCE".haplo.waved."$HAPLO".max"$MAXSIZE".vcf.gz "$PREFIX"."$PREFIX_REFERENCE".norm.vcf.gz
-  bcftools index -t "$PREFIX"."$PREFIX_REFERENCE".haplo.waved."$HAPLO".max"$MAXSIZE".vcf.gz
-  rm "$PREFIX"."$PREFIX_REFERENCE".norm.vcf.gz
-  # It doesn't work
-  # bash "$PATH_VCF_PREPROCESS" \
-  #     "$PATH_WAVED_VCF".gz \
-  #     "$HAPLO" \
-  #     1 \
-  #     "$PATH_REF_FA"
+  bash "$PATH_VCF_PREPROCESS" \
+      "$PATH_WAVED_FIXED_VCF".gz \
+      "$HAPLO" \
+      1 \
+      "$PATH_REF_FA"
 done
 
 echo "Identify variants with nucmer"
@@ -159,7 +153,7 @@ zgrep '#CHROM' "$PATH_VCF".gz -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPL
 
   PATH_NUCMER_VCF=nucmer/"$HAPLO".vcf.gz
   PATH_PGGB_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo."$HAPLO".max1.vcf.gz
-  PATH_PGGB_WAVED_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.waved."$HAPLO".max1.vcf.gz
+  PATH_PGGB_WAVED_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.waved.fixed."$HAPLO".max1.vcf.gz
 
   # Merge regions closer than 1000 bps to define the callable regions where to evaluate the variants
   dist=1000
@@ -196,15 +190,26 @@ zgrep '#CHROM' "$PATH_VCF".gz -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPL
   NUM_VARIANTS_PGGB_TOTAL=$(zgrep '^#' -vc $PATH_PGGB_VCF)
   NUM_VARIANTS_PGGB_WAVED_TOTAL=$(zgrep '^#' -vc $PATH_PGGB_WAVED_VCF)
 
-  NUM_VARIANTS_NUCMER_EVALUATED=$(grep None vcfeval/haplo/"$HAPLO"/summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 3 -d ' ')
-  NUM_VARIANTS_PGGB_EVALUATED=$(grep None vcfeval/haplo/"$HAPLO"/summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 4 -d ' ')
-  NUM_VARIANTS_PGGB_WAVED_EVALUATED=$(grep None vcfeval/haplo.waved/"$HAPLO"/summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 4 -d ' ')
-  
+  NUM_VARIANTS_NUCMER_TP=$(grep None vcfeval/haplo/"$HAPLO"/summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 3 -d ' ')
+
+  NUM_VARIANTS_PGGB_TP=$(grep None vcfeval/haplo/"$HAPLO"/summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 4 -d ' ')
+  FP=$(grep None vcfeval/haplo/"$HAPLO"/summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 5 -d ' ')
+  FN=$(grep None vcfeval/haplo/"$HAPLO"/summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 6 -d ' ')
+  NUM_VARIANTS_NUCMER_EVALUATED=$(echo "$NUM_VARIANTS_NUCMER_TP + $FN" | bc)
+  NUM_VARIANTS_PGGB_EVALUATED=$(echo "$NUM_VARIANTS_PGGB_TP + $FP" | bc)
+
+  NUM_VARIANTS_PGGB_WAVED_TP=$(grep None vcfeval/haplo.waved/"$HAPLO"/summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 4 -d ' ')
+  FP_WAVED=$(grep None vcfeval/haplo.waved/"$HAPLO"/summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 5 -d ' ')
+  FN_WAVED=$(grep None vcfeval/haplo.waved/"$HAPLO"/summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 6 -d ' ')
+  NUM_VARIANTS_NUCMER_WAVED_EVALUATED=$(echo "$NUM_VARIANTS_NUCMER_TP + $FN_WAVED" | bc)
+  NUM_VARIANTS_PGGB_WAVED_EVALUATED=$(echo "$NUM_VARIANTS_PGGB_TP + $FP_WAVED" | bc)
+
+
   # xargs trims whitespaces
   grep None vcfeval/haplo/"$HAPLO"/summary.txt | tr -s ' ' | xargs | cut -f 2,3,4,5,6,7,8,9 -d ' ' | tr ' ' '\t' | \
     awk -v haplo=$HAPLO -v nucmer=$NUM_VARIANTS_NUCMER_TOTAL -v pggb=$NUM_VARIANTS_PGGB_TOTAL -v nucmereval=$NUM_VARIANTS_NUCMER_EVALUATED -v pggbeval=$NUM_VARIANTS_PGGB_EVALUATED -v OFS='\t' '{print(haplo, $0, nucmer, pggb, nucmereval/nucmer, pggbeval/pggb)}' >> haplo.statistics.tsv
   grep None vcfeval/haplo.waved/"$HAPLO"/summary.txt |  tr -s ' ' | xargs | cut -f 2,3,4,5,6,7,8,9 -d ' ' | tr ' ' '\t' | \
-      awk -v haplo=$HAPLO -v nucmer=$NUM_VARIANTS_NUCMER_TOTAL -v pggb=$NUM_VARIANTS_PGGB_WAVED_TOTAL -v nucmereval=$NUM_VARIANTS_NUCMER_EVALUATED -v pggbeval=$NUM_VARIANTS_PGGB_WAVED_EVALUATED -v OFS='\t' '{print(haplo, $0, nucmer, pggb, nucmereval/nucmer, pggbeval/pggb)}' >> haplo.waved.statistics.tsv
+      awk -v haplo=$HAPLO -v nucmer=$NUM_VARIANTS_NUCMER_TOTAL -v pggb=$NUM_VARIANTS_PGGB_WAVED_TOTAL -v nucmereval=$NUM_VARIANTS_NUCMER_WAVED_EVALUATED -v pggbeval=$NUM_VARIANTS_PGGB_WAVED_EVALUATED -v OFS='\t' '{print(haplo, $0, nucmer, pggb, nucmereval/nucmer, pggbeval/pggb)}' >> haplo.waved.statistics.tsv
 done
 
 mkdir -p "$DIR_OUTPUT"
