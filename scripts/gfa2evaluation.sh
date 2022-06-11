@@ -41,6 +41,7 @@ PATH_SED_GFA="$PREFIX".sed.gfa
 sed 's/#/-/' "$PATH_GFA" | sed 's/#/#1#/' > "$PATH_SED_GFA"
 
 PATH_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.vcf
+PATH_WAVED_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.waved.vcf
 \time -v vg deconstruct -P "$PREFIX_REFERENCE" -H '#' -e -a -t "$THREADS" "$PATH_SED_GFA" > "$PATH_VCF"
 
 # Revert names in the VCF files
@@ -50,12 +51,20 @@ grep '^#' "$PATH_VCF" -v | sed "s/^$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g" >> x
 sed -i 's/#0//g' x.vcf # Wrong PanSN-spec management in vg 1.41.0
 mv x.vcf "$PATH_VCF"
 
+vcfbub -l 0 -a 100000 --input "$PATH_VCF" | vcfwave -I 1000 -t $THREADS > $PATH_WAVED_VCF
+
 echo "--- Take SNVs for each haplotype"
 grep '#CHROM' "$PATH_VCF" -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPLO; do
   echo "$HAPLO"
 
   bash "$PATH_VCF_PREPROCESS" \
       "$PATH_VCF" \
+      "$HAPLO" \
+      1 \
+      "$PATH_REF_FA"
+
+  bash "$PATH_VCF_PREPROCESS" \
+      "$PATH_WAVED_VCF" \
       "$HAPLO" \
       1 \
       "$PATH_REF_FA"
@@ -136,6 +145,7 @@ grep '#CHROM' "$PATH_VCF" -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPLO; d
 
   PATH_NUCMER_VCF=nucmer/"$HAPLO".vcf.gz
   PATH_PGGB_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.vcf."$HAPLO".max1.vcf.gz
+  PATH_PGGB_WAVED_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.waved.vcf."$HAPLO".max1.vcf.gz
 
   # Merge regions closer than 1000 bps to define the callable regions where to evaluate the variants
   dist=1000
@@ -146,12 +156,23 @@ grep '#CHROM' "$PATH_VCF" -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPLO; d
       -c "$PATH_PGGB_VCF" \
       -T "$THREADS" \
       -e <(bedtools intersect -a <(bedtools merge -d $dist -i "$PATH_NUCMER_VCF" ) -b <(bedtools merge -d $dist -i "$PATH_PGGB_VCF")) \
-      -o vcfeval/"$HAPLO"
+      -o vcfeval/haplo/"$HAPLO"
+
+  rtg vcfeval \
+      -t "$PATH_REF_FA".sdf \
+      -b "$PATH_NUCMER_VCF" \
+      -c "$PATH_PGGB_WAVED_VCF" \
+      -T "$THREADS" \
+      -e <(bedtools intersect -a <(bedtools merge -d $dist -i "$PATH_NUCMER_VCF" ) -b <(bedtools merge -d $dist -i "$PATH_PGGB_WAVED_VCF")) \
+      -o vcfeval/haplo.waved/"$HAPLO"
 done
 
 cd vcfeval
-echo haplotype tp.baseline tp.call fp fn precision recall f1.score | tr ' ' '\t' > statistics.tsv
-grep None */summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 1,3,4,5,6,7,8,9 -d ' ' | tr ' ' '\t' >> statistics.tsv
+echo haplotype tp.baseline tp.call fp fn precision recall f1.score | tr ' ' '\t' > haplo.statistics.tsv
+grep None haplo/*/summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 1,3,4,5,6,7,8,9 -d ' ' | tr ' ' '\t' >> haplo.statistics.tsv
+
+echo haplotype tp.baseline tp.call fp fn precision recall f1.score | tr ' ' '\t' > haplo.waved.statistics.tsv
+grep None haplo/*/summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 1,3,4,5,6,7,8,9 -d ' ' | tr ' ' '\t' >> haplo.waved.statistics.tsv
 cd ..
 
 mkdir -p "$DIR_OUTPUT"
