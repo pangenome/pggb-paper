@@ -227,8 +227,13 @@ Evaluation:
 ```shell
 # Input
 PATH_PGGB_VCF=/lizardfs/guarracino/pggb-paper/graphs/hsapiens90.chr6_p98.s5000.n90.k271.G4001-4507.chm13/hsapiens90.chr6.fa.gz.89d18c5.wfmash.paf.d2e0b63.1e53bae.smooth.final.grch38.vcf
+LABEL=chr6_p98.s5000.n90.k271.G13117-13219
+
 PATH_PGGB_VCF=/lizardfs/guarracino/pggb-paper/graphs/hsapiens90.chr6_p98.s5000.n90.k271.G13117-13219.chm13/hsapiens90.chr6.fa.gz.89d18c5.d2e0b63.59a83aa.smooth.final.grch38.vcf
-PATH_PGGB_VCF=/lizardfs/guarracino/pggb-paper/graphs/wgg88.chr6.pan.fa.a2fb268.4030258.6a1ecc2.smooth.grch38.vcf
+LABEL=chr6_p98.s5000.n90.k271.G4001-4507
+
+PATH_PGGB_VCF=/lizardfs/guarracino/pggb-paper/graphs/wgg88/wgg88.chr6.pan.fa.a2fb268.4030258.6a1ecc2.smooth.grch38.vcf
+LABEL=wgg88.chr6
 
 PATH_REF_FA=/lizardfs/guarracino/pggb-paper/references/hsapiens90.chr6.fa.gz.89d18c5.d2e0b63.59a83aa.smooth.final.grch38.fa
 PATH_VCF_PREPROCESS=/home/guarracino/tools/pggb/scripts/vcf_preprocess.sh
@@ -237,10 +242,10 @@ DIR_TRUTH_VCF=/lizardfs/guarracino/HPRC/mini_dataset/truth
 THREADS=48
 
 
-PREFIX=$(basename "$PATH_PGGB_VCF" .vcf)
 
-mkdir -p $PREFIX
-cd $PREFIX
+
+mkdir -p $LABEL
+cd $LABEL
 
 echo "VCF file preprocessing for each sample"
 grep '#CHROM' "$PATH_PGGB_VCF" -m 1 | cut -f 10- | tr '\t' '\n' | while read SAMPLE; do
@@ -283,6 +288,21 @@ grep '#CHROM' "$PATH_PGGB_VCF" -m 1 | cut -f 10- | tr '\t' '\n' | while read SAM
                 -e <(zcat ${DIR_REGIONS}/GRCh38_alldifficultregions.bed.gz | sed 's/chr/grch38#1#chr/') \
                 -T ${THREADS} \
                 -o vcfeval/${SAMPLE}/hard
+    fi
+done
+
+
+echo "Collect statistics"
+
+echo label haplotype region tp.baseline tp.call fp fn precision recall f1.score | tr ' ' '\t' > statistics.tsv
+
+grep '#CHROM' "$PATH_PGGB_VCF" -m 1 | cut -f 10- | tr '\t' '\n' | while read SAMPLE; do
+    echo $SAMPLE
+
+    if [[ -f vcfeval/$SAMPLE/easy/summary.txt ]]; then
+        # xargs trims whitespaces
+        grep None vcfeval/$SAMPLE/easy/summary.txt | tr -s ' ' | xargs | cut -f 2,3,4,5,6,7,8,9 -d ' ' | tr ' ' '\t' | awk -v label=$LABEL -v sample=$SAMPLE -v region="easy" -v OFS='\t' '{print(label, sample, region, $0)}' >> statistics.tsv
+        grep None vcfeval/$SAMPLE/hard/summary.txt | tr -s ' ' | xargs | cut -f 2,3,4,5,6,7,8,9 -d ' ' | tr ' ' '\t' | awk -v label=$LABEL -v sample=$SAMPLE -v region="hard" -v OFS='\t' '{print(label, sample, region, $0)}' >> statistics.tsv
     fi
 done
 ```
