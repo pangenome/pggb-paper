@@ -226,9 +226,10 @@ Evaluation:
 
 ```shell
 # Input
-PATH_GFA=/lizardfs/guarracino/pggb-paper/graphs/hsapiens90.chr6_p98.s5000.n90.k271.G4001-4507.chm13/hsapiens90.chr6.fa.gz.89d18c5.wfmash.paf.d2e0b63.1e53bae.smooth.final.gfa
-PREFIX_REFERENCE=grch38
 PATH_PGGB_VCF=/lizardfs/guarracino/pggb-paper/graphs/hsapiens90.chr6_p98.s5000.n90.k271.G4001-4507.chm13/hsapiens90.chr6.fa.gz.89d18c5.wfmash.paf.d2e0b63.1e53bae.smooth.final.grch38.vcf
+PATH_PGGB_VCF=/lizardfs/guarracino/pggb-paper/graphs/hsapiens90.chr6_p98.s5000.n90.k271.G13117-13219.chm13/hsapiens90.chr6.fa.gz.89d18c5.d2e0b63.59a83aa.smooth.final.grch38.vcf
+PATH_PGGB_VCF=/lizardfs/guarracino/pggb-paper/graphs/wgg88.chr6.pan.fa.a2fb268.4030258.6a1ecc2.smooth.grch38.vcf
+
 PATH_REF_FA=/lizardfs/guarracino/pggb-paper/references/hsapiens90.chr6.fa.gz.89d18c5.d2e0b63.59a83aa.smooth.final.grch38.fa
 PATH_VCF_PREPROCESS=/home/guarracino/tools/pggb/scripts/vcf_preprocess.sh
 DIR_REGIONS=/lizardfs/guarracino/HPRC/mini_dataset/union
@@ -236,12 +237,13 @@ DIR_TRUTH_VCF=/lizardfs/guarracino/HPRC/mini_dataset/truth
 THREADS=48
 
 
-PREFIX=$(basename "$PATH_GFA" .gfa)
+PREFIX=$(basename "$PATH_PGGB_VCF" .vcf)
 
-echo "Extracting FASTA file for the reference"
+mkdir -p $PREFIX
+cd $PREFIX
 
 echo "VCF file preprocessing for each sample"
-for SAMPLE in HG00438 HG00621 HG00673 HG00733 HG00735 HG00741; do
+grep '#CHROM' "$PATH_PGGB_VCF" -m 1 | cut -f 10- | tr '\t' '\n' | while read SAMPLE; do
     echo $SAMPLE
 
     bash "$PATH_VCF_PREPROCESS" \
@@ -254,28 +256,33 @@ done
 echo "Small variant evaluation"
 
 PATH_REF_SDF="$PATH_REF_FA".sdf
-rtg format -o "$PATH_REF_SDF" "$PATH_REF_FA"
+if [[ ! -d $PATH_REF_SDF ]]; then
+        rtg format -o "$PATH_REF_SDF" "$PATH_REF_FA"
+fi
 
-for SAMPLE in HG00438 HG00621 HG00673 HG00733 HG00735 HG00741; do
+grep '#CHROM' "$PATH_PGGB_VCF" -m 1 | cut -f 10- | tr '\t' '\n' | while read SAMPLE; do
     echo $SAMPLE
 
     TRUTH_VCF=${DIR_TRUTH_VCF}/$SAMPLE.GRCh38_no_alt.deepvariant.prefix.vcf.gz
-    PATH_PGGB_SAMPLE_VCF="$PREFIX"."$PREFIX_REFERENCE".vcf."$SAMPLE".max50.vcf.gz
-    
-    rtg vcfeval \
-            -t $PATH_REF_SDF \
-            -b $TRUTH_VCF \
-            -c $PATH_PGGB_SAMPLE_VCF \
-            -e <(zcat ${DIR_REGIONS}/GRCh38_notinalldifficultregions.bed.gz | sed 's/chr/grch38#1#chr/' ) \
-            -T ${THREADS} \
-            -o ${SAMPLE}.easy.report
 
-    rtg vcfeval \
-            -t $PATH_REF_SDF \
-            -b $TRUTH_VCF \
-            -c $PATH_PGGB_SAMPLE_VCF \
-            -e <(zcat ${DIR_REGIONS}/GRCh38_alldifficultregions.bed.gz | sed 's/chr/grch38#1#chr/') \
-            -T ${THREADS} \
-            -o ${SAMPLE}.hard.report
+    if [[ -s $TRUTH_VCF ]]; then
+        PATH_PGGB_SAMPLE_VCF="$PATH_PGGB_VCF"."$SAMPLE".max50.vcf.gz
+        
+        rtg vcfeval \
+                -t $PATH_REF_SDF \
+                -b $TRUTH_VCF \
+                -c $PATH_PGGB_SAMPLE_VCF \
+                -e <(zcat ${DIR_REGIONS}/GRCh38_notinalldifficultregions.bed.gz | sed 's/chr/grch38#1#chr/' ) \
+                -T ${THREADS} \
+                -o vcfeval/${SAMPLE}/easy
+
+        rtg vcfeval \
+                -t $PATH_REF_SDF \
+                -b $TRUTH_VCF \
+                -c $PATH_PGGB_SAMPLE_VCF \
+                -e <(zcat ${DIR_REGIONS}/GRCh38_alldifficultregions.bed.gz | sed 's/chr/grch38#1#chr/') \
+                -T ${THREADS} \
+                -o vcfeval/${SAMPLE}/hard
+    fi
 done
 ```
