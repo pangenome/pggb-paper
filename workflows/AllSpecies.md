@@ -17,11 +17,12 @@ f=/lizardfs/guarracino/pggb-paper/sequences/hsapiens90.chr6.masked.fa.gz
 p=98
 s=10000
 n=90
+F=0.001
 k=79
 G=4001,4507
 ref=chm13
-out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
-sbatch -c 48 -p 386mem --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -V $ref:# -t $t -o $out; mv $out $out_folder"
+out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.F0001.k$k.G$(echo $G | tr ',' '-').$ref
+sbatch -c 48 -p 386mem --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -F $F -k $k -P $POA -O $O -G $G -V $ref:# -t $t -o $out; mv $out $out_folder"
 
 f=/lizardfs/guarracino/pggb-paper/sequences/hsapiens90.chr6.masked.fa.gz
 p=98
@@ -160,13 +161,13 @@ POA=asm5
 O=0.03
 f=/lizardfs/flaviav/rat/pggb_paper/parts/chr12.pan+ref.fa.gz
 p=98
-s=2000
+s=1000
 n=32
 k=79
 G=4001,4507
 ref=rn7
-out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
-sbatch -c 48 -p workers --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -V $ref:# -t $t -o $out; mv $out $out_folder"
+out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.F0001.k$k.G$(echo $G | tr ',' '-').$ref
+sbatch -c 48 -p workers --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -F 0.001 -k $k -P $POA -O $O -G $G -V $ref:# -t $t -o $out; mv $out $out_folder"
 
 t=48
 POA=asm5
@@ -181,7 +182,7 @@ ref=rn7
 out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
 sbatch -c 48 -p workers --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -V $ref:# -t $t -o $out; mv $out $out_folder"
 
-Evaluation:
+Nucmer-based evaluation:
 
 
 ```shell
@@ -218,4 +219,63 @@ sbatch -c 48 -p workers --wrap "hostname; cd /scratch && bash /home/guarracino/p
 
 
 sbatch -c 48 -p workers --wrap "hostname; cd /scratch && bash /home/guarracino/pggb-paper/scripts/gfa2evaluation.sh /lizardfs/guarracino/pggb-paper/graphs/ecoli100_p90.s5000.n100.k47.G4001-4507.BH100N_MG2017_3a53c37/*.final.gfa BH100N_MG2017_3a53c37 /lizardfs/guarracino/pggb-paper/evaluation/ecoli100_p90.s5000.n100.k47.G4001-4507.BH100N_MG2017_3a53c37/ $PATH_VCF_PREPROCESS $PATH_NUCMER_2_VCF 48"
+```
+
+
+Evaluation:
+
+```shell
+# Input
+PATH_GFA=/lizardfs/guarracino/pggb-paper/graphs/hsapiens90.chr6_p98.s5000.n90.k271.G4001-4507.chm13/hsapiens90.chr6.fa.gz.89d18c5.wfmash.paf.d2e0b63.1e53bae.smooth.final.gfa
+PREFIX_REFERENCE=grch38
+PATH_PGGB_VCF=/lizardfs/guarracino/pggb-paper/graphs/hsapiens90.chr6_p98.s5000.n90.k271.G4001-4507.chm13/hsapiens90.chr6.fa.gz.89d18c5.wfmash.paf.d2e0b63.1e53bae.smooth.final.grch38.vcf
+PATH_REF_FA=/lizardfs/guarracino/pggb-paper/references/hsapiens90.chr6.fa.gz.89d18c5.d2e0b63.59a83aa.smooth.final.grch38.fa
+PATH_VCF_PREPROCESS=/home/guarracino/tools/pggb/scripts/vcf_preprocess.sh
+DIR_REGIONS=/lizardfs/guarracino/HPRC/mini_dataset/union
+DIR_TRUTH_VCF=/lizardfs/guarracino/HPRC/mini_dataset/truth
+THREADS=48
+
+
+PREFIX=$(basename "$PATH_GFA" .gfa)
+
+echo "Extracting FASTA file for the reference"
+
+echo "VCF file preprocessing for each sample"
+for SAMPLE in HG00438 HG00621 HG00673 HG00733 HG00735 HG00741; do
+    echo $SAMPLE
+
+    bash "$PATH_VCF_PREPROCESS" \
+        "$PATH_PGGB_VCF" \
+        "$SAMPLE" \
+        50 \
+        "$PATH_REF_FA"
+done
+
+echo "Small variant evaluation"
+
+PATH_REF_SDF="$PATH_REF_FA".sdf
+rtg format -o "$PATH_REF_SDF" "$PATH_REF_FA"
+
+for SAMPLE in HG00438 HG00621 HG00673 HG00733 HG00735 HG00741; do
+    echo $SAMPLE
+
+    TRUTH_VCF=${DIR_TRUTH_VCF}/$SAMPLE.GRCh38_no_alt.deepvariant.prefix.vcf.gz
+    PATH_PGGB_SAMPLE_VCF="$PREFIX"."$PREFIX_REFERENCE".vcf."$SAMPLE".max50.vcf.gz
+    
+    rtg vcfeval \
+            -t $PATH_REF_SDF \
+            -b $TRUTH_VCF \
+            -c $PATH_PGGB_SAMPLE_VCF \
+            -e <(zcat ${DIR_REGIONS}/GRCh38_notinalldifficultregions.bed.gz | sed 's/chr/grch38#1#chr/' ) \
+            -T ${THREADS} \
+            -o ${SAMPLE}.easy.report
+
+    rtg vcfeval \
+            -t $PATH_REF_SDF \
+            -b $TRUTH_VCF \
+            -c $PATH_PGGB_SAMPLE_VCF \
+            -e <(zcat ${DIR_REGIONS}/GRCh38_alldifficultregions.bed.gz | sed 's/chr/grch38#1#chr/') \
+            -T ${THREADS} \
+            -o ${SAMPLE}.hard.report
+done
 ```
