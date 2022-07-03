@@ -143,45 +143,6 @@ out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
 sbatch -c 48 -p 386mem --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -V $ref:# -t $t -o $out; mv $out $out_folder"
 ```
 
-t=48
-POA=asm5
-O=0.03
-f=/lizardfs/flaviav/rat/pggb_paper/parts/chr12.pan+ref.fa.gz
-p=98
-s=1000
-n=32
-k=79
-G=4001,4507
-ref=rn7
-out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
-sbatch -c 48 -p workers --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -V $ref:# -t $t -o $out; mv $out $out_folder"
-
-t=48
-POA=asm5
-O=0.03
-f=/lizardfs/flaviav/rat/pggb_paper/parts/chr12.pan+ref.fa.gz
-p=98
-s=1000
-n=32
-k=79
-G=4001,4507
-ref=rn7
-out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.F0001.k$k.G$(echo $G | tr ',' '-').$ref
-sbatch -c 48 -p workers --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -F 0.001 -k $k -P $POA -O $O -G $G -V $ref:# -t $t -o $out; mv $out $out_folder"
-
-t=48
-POA=asm5
-O=0.03
-f=/lizardfs/flaviav/rat/pggb_paper/parts/chr12.pan+ref.fa.gz
-p=98
-s=5000
-n=32
-k=79
-G=4001,4507
-ref=rn7
-out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
-sbatch -c 48 -p workers --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -V $ref:# -t $t -o $out; mv $out $out_folder"
-
 Nucmer-based evaluation:
 
 
@@ -227,10 +188,10 @@ Evaluation:
 ```shell
 # Input
 PATH_PGGB_VCF=/lizardfs/guarracino/pggb-paper/graphs/hsapiens90.chr6_p98.s5000.n90.k271.G4001-4507.chm13/hsapiens90.chr6.fa.gz.89d18c5.wfmash.paf.d2e0b63.1e53bae.smooth.final.grch38.vcf
-LABEL=chr6_p98.s5000.n90.k271.G13117-13219
+LABEL=hsapiens90.chr6_p98.s5000.n90.k271.G13117-13219
 
 PATH_PGGB_VCF=/lizardfs/guarracino/pggb-paper/graphs/hsapiens90.chr6_p98.s5000.n90.k271.G13117-13219.chm13/hsapiens90.chr6.fa.gz.89d18c5.d2e0b63.59a83aa.smooth.final.grch38.vcf
-LABEL=chr6_p98.s5000.n90.k271.G4001-4507
+LABEL=hsapiens90.chr6_p98.s5000.n90.k271.G4001-4507
 
 PATH_PGGB_VCF=/lizardfs/guarracino/pggb-paper/graphs/wgg88/wgg88.chr6.pan.fa.a2fb268.4030258.6a1ecc2.smooth.grch38.vcf
 LABEL=wgg88.chr6
@@ -305,4 +266,86 @@ grep '#CHROM' "$PATH_PGGB_VCF" -m 1 | cut -f 10- | tr '\t' '\n' | while read SAM
         grep None vcfeval/$SAMPLE/hard/summary.txt | tr -s ' ' | xargs | cut -f 2,3,4,5,6,7,8,9 -d ' ' | tr ' ' '\t' | awk -v label=$LABEL -v sample=$SAMPLE -v region="hard" -v OFS='\t' '{print(label, sample, region, $0)}' >> statistics.tsv
     fi
 done
+
+
+# Prepare FPs/FNs for plotting
+echo label haplotype region chrom pos ac lv | tr ' ' '\t' > fp.tsv
+echo label haplotype region chrom pos ac lv | tr ' ' '\t' > fn.tsv
+
+grep '#CHROM' "$PATH_PGGB_VCF" -m 1 | cut -f 10- | tr '\t' '\n' | while read SAMPLE; do
+    echo $SAMPLE
+
+    if [[ -f vcfeval/$SAMPLE/easy/summary.txt ]]; then
+        PATH_FP_VCF=vcfeval/$SAMPLE/easy/fp.vcf.gz
+        zcat $PATH_FP_VCF | cut -f -8 | vcf2tsv | cut -f 1,2,8,13 | awk -v label=$LABEL -v sample=$SAMPLE -v region="easy" -v OFS='\t' 'NR > 1 { print label, sample, region, $0 }' >> fp.tsv
+
+        PATH_FP_VCF=vcfeval/$SAMPLE/hard/fp.vcf.gz
+        zcat $PATH_FP_VCF | cut -f -8 | vcf2tsv | cut -f 1,2,8,13 | awk -v label=$LABEL -v sample=$SAMPLE -v region="hard" -v OFS='\t' 'NR > 1 { print label, sample, region, $0 }' >> fp.tsv
+
+
+        PATH_FN_VCF=vcfeval/$SAMPLE/easy/fn.vcf.gz
+        zcat $PATH_FN_VCF | cut -f -8 | vcf2tsv | cut -f 1,2,8,13 | awk -v label=$LABEL -v sample=$SAMPLE -v region="easy" -v OFS='\t' 'NR > 1 { print label, sample, region, $0 }' >> fn.tsv
+
+        PATH_FN_VCF=vcfeval/$SAMPLE/hard/fn.vcf.gz
+        zcat $PATH_FN_VCF | cut -f -8 | vcf2tsv | cut -f 1,2,8,13 | awk -v label=$LABEL -v sample=$SAMPLE -v region="hard" -v OFS='\t' 'NR > 1 { print label, sample, region, $0 }' >> fn.tsv
+    fi
+done
 ```
+
+
+
+out_folder=/lizardfs/guarracino/pggb-paper/graphs
+t=48
+POA=asm5
+O=0.03
+f=/lizardfs/flaviav/rat/pggb_paper/parts/chr12.pan+ref.fa.gz
+p=98
+s=1000
+n=32
+k=79
+G=4001,4507
+ref=rn7
+out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
+sbatch -c 48 -p workers --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -V $ref:# -t $t -o $out; mv $out $out_folder"
+
+out_folder=/lizardfs/guarracino/pggb-paper/graphs
+t=48
+POA=asm5
+O=0.03
+f=/lizardfs/flaviav/rat/pggb_paper/parts/chr12.pan+ref.fa.gz
+p=98
+s=1000
+n=32
+k=79
+G=4001,4507
+ref=rn7
+out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.F0001.k$k.G$(echo $G | tr ',' '-').$ref
+sbatch -c 48 -p workers --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -F 0.001 -k $k -P $POA -O $O -G $G -V $ref:# -t $t -o $out; mv $out $out_folder"
+
+out_folder=/lizardfs/guarracino/pggb-paper/graphs
+t=48
+POA=asm5
+O=0.03
+f=/lizardfs/flaviav/rat/pggb_paper/parts/chr12.pan+ref.fa.gz
+p=98
+s=5000
+n=32
+k=79
+G=4001,4507
+ref=rn7
+out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
+sbatch -c 48 -p workers --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -V $ref:# -t $t -o $out; mv $out $out_folder"
+
+out_folder=/lizardfs/guarracino/pggb-paper/graphs
+t=48
+POA=asm5
+O=0.03
+f=/lizardfs/flaviav/rat/pggb_paper/parts/chr12.pan+ref.fa.gz
+p=98
+s=50000
+n=32
+k=229
+G=4001,4507
+ref=rn7
+out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
+sbatch -c 48 -p workers --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -V $ref:# -t $t -o $out; mv $out $out_folder"
