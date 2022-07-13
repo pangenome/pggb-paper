@@ -26,7 +26,7 @@ G=700,900,1100
 ref=chm13
 out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.F0001.k$k.G$(echo $G | tr ',' '-').$ref
 sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -t $t -o $out; mv $out $out_folder_graphs"
-sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out; mv $out $out_folder_evaluation"
+sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out $t; mv $out $out_folder_evaluation"
 
 
 # Mus musculus
@@ -39,7 +39,7 @@ G=700,900,1100
 ref=GRCm39
 out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
 sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -t $t -o $out; mv $out $out_folder_graphs"
-sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out; mv $out $out_folder_evaluation"
+sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out $t; mv $out $out_folder_evaluation"
 
 
 # Rat
@@ -52,7 +52,7 @@ G=700,900,1100
 ref=rn7
 out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
 sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -t $t -o $out; mv $out $out_folder_graphs"
-sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out; mv $out $out_folder_evaluation"
+sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out $t; mv $out $out_folder_evaluation"
 
 
 # Primates
@@ -65,7 +65,7 @@ G=700,900,1100
 ref=GRC38
 out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
 sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -t $t -o $out; mv $out $out_folder_graphs"
-sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out; mv $out $out_folder_evaluation"
+sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out $t; mv $out $out_folder_evaluation"
 
 f=/lizardfs/guarracino/pggb-paper/assemblies/primates4.chr7.fa.gz
 p=95
@@ -76,7 +76,7 @@ G=700,900,1100
 ref=GRC38
 out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
 sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -t $t -o $out; mv $out $out_folder_graphs"
-sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out; mv $out $out_folder_evaluation"
+sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out $t; mv $out $out_folder_evaluation"
 
 
 # Arabidopsis thaliana
@@ -89,7 +89,7 @@ G=700,900,1100
 ref=TAIR10
 out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
 sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -t $t -o $out; mv $out $out_folder_graphs"
-sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out; mv $out $out_folder_evaluation"
+sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out $t; mv $out $out_folder_evaluation"
 
 
 # Soy
@@ -102,7 +102,7 @@ G=700,900,1100
 ref=ZH13
 out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
 sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -t $t -o $out; mv $out $out_folder_graphs"
-sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out; mv $out $out_folder_evaluation"
+sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out $t; mv $out $out_folder_evaluation"
 
 
 # Tomato
@@ -115,7 +115,7 @@ G=700,900,1100
 ref=SL5
 out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
 sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -t $t -o $out; mv $out $out_folder_graphs"
-sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out; mv $out $out_folder_evaluation"
+sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out $t; mv $out $out_folder_evaluation"
 
 
 # Yeast
@@ -128,7 +128,7 @@ G=700,900,1100
 ref=SGDref
 out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
 sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -t $t -o $out; mv $out $out_folder_graphs"
-sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out; mv $out $out_folder_evaluation"
+sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out $t; mv $out $out_folder_evaluation"
 
 
 # E. coli
@@ -141,7 +141,7 @@ G=700,900,1100
 ref=BH100N_MG2017_3a53c37
 out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
 sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -t $t -o $out; mv $out $out_folder_graphs"
-sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out; mv $out $out_folder_evaluation"
+sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out $t; mv $out $out_folder_evaluation"
 ```
 
 

@@ -7,16 +7,17 @@
 #     /lizardfs/guarracino/day2_hsapiens/graphs/chr20.pan/chr20.pan.fa.gz.254a7b3.04f1c29.5486fb6.smooth.final.gfa \
 #     chm13 \
 #     out \
-#     ~/tools/pggb/scripts/vcf_preprocess.sh \
-#     ~/tools/pggb/scripts/nucmer2vcf.R \
 #     48
+
+PATH_VCF_PREPROCESS=/home/guarracino/tools/pggb/scripts/vcf_preprocess.sh
+PATH_NUCMER_2_VCF=/home/guarracino/tools/pggb/scripts/nucmer2vcf.R
 
 PATH_GFA=$1
 PREFIX_REFERENCE=$2
 DIR_OUTPUT=$3
-PATH_VCF_PREPROCESS=/home/guarracino/tools/pggb/scripts/vcf_preprocess.sh
-PATH_NUCMER_2_VCF=/home/guarracino/tools/pggb/scripts/nucmer2vcf.R
-THREADS=48
+THREADS=$4
+
+
 
 PREFIX=$(basename "$PATH_GFA" .gfa)
 
