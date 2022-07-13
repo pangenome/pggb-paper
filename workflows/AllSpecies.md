@@ -1,7 +1,5 @@
 ### All species
 
-The (partial) datasets are in `/lizardfs/guarracino/pggb-paper/sequences`.
-
 Run `pggb` and the Nucmer-based evaluation:
 
 ```shell
@@ -137,45 +135,73 @@ sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n 
 
 
 
+[//]: # ()
+[//]: # (TO DELETE:)
 
-TO DELETE:
+[//]: # ()
+[//]: # (```shell)
 
-```shell
-echo "Collect statistics"
+[//]: # (echo "Collect statistics")
 
-echo label haplotype region tp.baseline tp.call fp fn precision recall f1.score | tr ' ' '\t' > statistics.tsv
+[//]: # ()
+[//]: # (echo label haplotype region tp.baseline tp.call fp fn precision recall f1.score | tr ' ' '\t' > statistics.tsv)
 
-grep '#CHROM' "$PATH_PGGB_VCF" -m 1 | cut -f 10- | tr '\t' '\n' | while read SAMPLE; do
-    echo $SAMPLE
+[//]: # ()
+[//]: # (grep '#CHROM' "$PATH_PGGB_VCF" -m 1 | cut -f 10- | tr '\t' '\n' | while read SAMPLE; do)
 
-    if [[ -f vcfeval/$SAMPLE/easy/summary.txt ]]; then
-        # xargs trims whitespaces
-        grep None vcfeval/$SAMPLE/easy/summary.txt | tr -s ' ' | xargs | cut -f 2,3,4,5,6,7,8,9 -d ' ' | tr ' ' '\t' | awk -v label=$LABEL -v sample=$SAMPLE -v region="easy" -v OFS='\t' '{print(label, sample, region, $0)}' >> statistics.tsv
-        grep None vcfeval/$SAMPLE/hard/summary.txt | tr -s ' ' | xargs | cut -f 2,3,4,5,6,7,8,9 -d ' ' | tr ' ' '\t' | awk -v label=$LABEL -v sample=$SAMPLE -v region="hard" -v OFS='\t' '{print(label, sample, region, $0)}' >> statistics.tsv
-    fi
-done
+[//]: # (    echo $SAMPLE)
 
+[//]: # ()
+[//]: # (    if [[ -f vcfeval/$SAMPLE/easy/summary.txt ]]; then)
 
-# Prepare FPs/FNs for plotting
-echo label haplotype region chrom pos ac lv | tr ' ' '\t' > fp.tsv
-echo label haplotype region chrom pos ac lv | tr ' ' '\t' > fn.tsv
+[//]: # (        # xargs trims whitespaces)
 
-grep '#CHROM' "$PATH_PGGB_VCF" -m 1 | cut -f 10- | tr '\t' '\n' | while read SAMPLE; do
-    echo $SAMPLE
+[//]: # (        grep None vcfeval/$SAMPLE/easy/summary.txt | tr -s ' ' | xargs | cut -f 2,3,4,5,6,7,8,9 -d ' ' | tr ' ' '\t' | awk -v label=$LABEL -v sample=$SAMPLE -v region="easy" -v OFS='\t' '{print&#40;label, sample, region, $0&#41;}' >> statistics.tsv)
 
-    if [[ -f vcfeval/$SAMPLE/easy/summary.txt ]]; then
-        PATH_FP_VCF=vcfeval/$SAMPLE/easy/fp.vcf.gz
-        zcat $PATH_FP_VCF | cut -f -8 | vcf2tsv | cut -f 1,2,8,13 | awk -v label=$LABEL -v sample=$SAMPLE -v region="easy" -v OFS='\t' 'NR > 1 { print label, sample, region, $0 }' >> fp.tsv
+[//]: # (        grep None vcfeval/$SAMPLE/hard/summary.txt | tr -s ' ' | xargs | cut -f 2,3,4,5,6,7,8,9 -d ' ' | tr ' ' '\t' | awk -v label=$LABEL -v sample=$SAMPLE -v region="hard" -v OFS='\t' '{print&#40;label, sample, region, $0&#41;}' >> statistics.tsv)
 
-        PATH_FP_VCF=vcfeval/$SAMPLE/hard/fp.vcf.gz
-        zcat $PATH_FP_VCF | cut -f -8 | vcf2tsv | cut -f 1,2,8,13 | awk -v label=$LABEL -v sample=$SAMPLE -v region="hard" -v OFS='\t' 'NR > 1 { print label, sample, region, $0 }' >> fp.tsv
+[//]: # (    fi)
 
+[//]: # (done)
 
-        PATH_FN_VCF=vcfeval/$SAMPLE/easy/fn.vcf.gz
-        zcat $PATH_FN_VCF | cut -f -8 | vcf2tsv | cut -f 1,2,8,13 | awk -v label=$LABEL -v sample=$SAMPLE -v region="easy" -v OFS='\t' 'NR > 1 { print label, sample, region, $0 }' >> fn.tsv
+[//]: # ()
+[//]: # ()
+[//]: # (# Prepare FPs/FNs for plotting)
 
-        PATH_FN_VCF=vcfeval/$SAMPLE/hard/fn.vcf.gz
-        zcat $PATH_FN_VCF | cut -f -8 | vcf2tsv | cut -f 1,2,8,13 | awk -v label=$LABEL -v sample=$SAMPLE -v region="hard" -v OFS='\t' 'NR > 1 { print label, sample, region, $0 }' >> fn.tsv
-    fi
-done
-```
+[//]: # (echo label haplotype region chrom pos ac lv | tr ' ' '\t' > fp.tsv)
+
+[//]: # (echo label haplotype region chrom pos ac lv | tr ' ' '\t' > fn.tsv)
+
+[//]: # ()
+[//]: # (grep '#CHROM' "$PATH_PGGB_VCF" -m 1 | cut -f 10- | tr '\t' '\n' | while read SAMPLE; do)
+
+[//]: # (    echo $SAMPLE)
+
+[//]: # ()
+[//]: # (    if [[ -f vcfeval/$SAMPLE/easy/summary.txt ]]; then)
+
+[//]: # (        PATH_FP_VCF=vcfeval/$SAMPLE/easy/fp.vcf.gz)
+
+[//]: # (        zcat $PATH_FP_VCF | cut -f -8 | vcf2tsv | cut -f 1,2,8,13 | awk -v label=$LABEL -v sample=$SAMPLE -v region="easy" -v OFS='\t' 'NR > 1 { print label, sample, region, $0 }' >> fp.tsv)
+
+[//]: # ()
+[//]: # (        PATH_FP_VCF=vcfeval/$SAMPLE/hard/fp.vcf.gz)
+
+[//]: # (        zcat $PATH_FP_VCF | cut -f -8 | vcf2tsv | cut -f 1,2,8,13 | awk -v label=$LABEL -v sample=$SAMPLE -v region="hard" -v OFS='\t' 'NR > 1 { print label, sample, region, $0 }' >> fp.tsv)
+
+[//]: # ()
+[//]: # ()
+[//]: # (        PATH_FN_VCF=vcfeval/$SAMPLE/easy/fn.vcf.gz)
+
+[//]: # (        zcat $PATH_FN_VCF | cut -f -8 | vcf2tsv | cut -f 1,2,8,13 | awk -v label=$LABEL -v sample=$SAMPLE -v region="easy" -v OFS='\t' 'NR > 1 { print label, sample, region, $0 }' >> fn.tsv)
+
+[//]: # ()
+[//]: # (        PATH_FN_VCF=vcfeval/$SAMPLE/hard/fn.vcf.gz)
+
+[//]: # (        zcat $PATH_FN_VCF | cut -f -8 | vcf2tsv | cut -f 1,2,8,13 | awk -v label=$LABEL -v sample=$SAMPLE -v region="hard" -v OFS='\t' 'NR > 1 { print label, sample, region, $0 }' >> fn.tsv)
+
+[//]: # (    fi)
+
+[//]: # (done)
+
+[//]: # (```)
