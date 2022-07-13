@@ -187,9 +187,9 @@ zgrep '#CHROM' "$PATH_VCF".gz -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPL
   PATH_PGGB_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo."$HAPLO".max1.vcf.gz
   PATH_PGGB_WAVED_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.waved."$HAPLO".max1.vcf.gz
 
-  NUM_VARIANTS_NUCMER_TOTAL=$(zgrep '^#' -vc $PATH_NUCMER_VCF)
-  NUM_VARIANTS_PGGB_TOTAL=$(zgrep '^#' -vc $PATH_PGGB_VCF)
-  NUM_VARIANTS_PGGB_WAVED_TOTAL=$(zgrep '^#' -vc $PATH_PGGB_WAVED_VCF)
+  NUM_VARIANTS_NUCMER_TOTAL=$(zgrep '^#' -vc "$PATH_NUCMER_VCF")
+  NUM_VARIANTS_PGGB_TOTAL=$(zgrep '^#' -vc "$PATH_PGGB_VCF")
+  NUM_VARIANTS_PGGB_WAVED_TOTAL=$(zgrep '^#' -vc "$PATH_PGGB_WAVED_VCF")
 
   NUM_VARIANTS_NUCMER_TP=$(grep None vcfeval/haplo/"$HAPLO"/summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 3 -d ' ')
 
@@ -203,7 +203,7 @@ zgrep '#CHROM' "$PATH_VCF".gz -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPL
   FP_WAVED=$(grep None vcfeval/haplo.waved/"$HAPLO"/summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 5 -d ' ')
   FN_WAVED=$(grep None vcfeval/haplo.waved/"$HAPLO"/summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 6 -d ' ')
   NUM_VARIANTS_NUCMER_WAVED_EVALUATED=$(echo "$NUM_VARIANTS_NUCMER_TP + $FN_WAVED" | bc)
-  NUM_VARIANTS_PGGB_WAVED_EVALUATED=$(echo "$NUM_VARIANTS_PGGB_TP + $FP_WAVED" | bc)
+  NUM_VARIANTS_PGGB_WAVED_EVALUATED=$(echo "$NUM_VARIANTS_PGGB_WAVED_TP + $FP_WAVED" | bc)
 
 
   # xargs trims whitespaces
