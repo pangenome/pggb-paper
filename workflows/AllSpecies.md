@@ -17,7 +17,7 @@ O=0.001
 
 
 # Homo sapiens
-f=/lizardfs/guarracino/pggb-paper/sequences/hsapiens90.chr6.masked.fa.gz
+f=/lizardfs/guarracino/pggb-paper/assemblies/hsapiens90.chr6.masked.fa.gz
 p=98
 s=10000
 n=90
@@ -30,7 +30,7 @@ sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_
 
 
 # Mus musculus
-f=/lizardfs/guarracino/pggb-paper/sequences/mouse17.chr19.fa.gz
+f=/lizardfs/guarracino/pggb-paper/assemblies/mouse17.chr19.fa.gz
 p=98
 s=5000
 n=17
@@ -43,7 +43,7 @@ sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_
 
 
 # Rat
-f=/lizardfs/guarracino/pggb-paper/sequences/rat32.chr1.fa.gz
+f=/lizardfs/guarracino/pggb-paper/assemblies/rat32.chr1.fa.gz
 p=98
 s=5000
 n=32
@@ -56,7 +56,7 @@ sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_
 
 
 # Primates
-f=/lizardfs/guarracino/pggb-paper/sequences/primates4.chr6.fa.gz
+f=/lizardfs/guarracino/pggb-paper/assemblies/primates4.chr6.fa.gz
 p=95
 s=5000
 n=4
@@ -67,7 +67,7 @@ out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
 sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -t $t -o $out; mv $out $out_folder_graphs"
 sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_folder_graphs/*.final.gfa $ref $out; mv $out $out_folder_evaluation"
 
-f=/lizardfs/guarracino/pggb-paper/sequences/primates4.chr7.fa.gz
+f=/lizardfs/guarracino/pggb-paper/assemblies/primates4.chr7.fa.gz
 p=95
 s=5000
 n=4
@@ -80,7 +80,7 @@ sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_
 
 
 # Arabidopsis thaliana
-f=/lizardfs/guarracino/pggb-paper/sequences/athaliana7.chr1.fa.gz
+f=/lizardfs/guarracino/pggb-paper/assemblies/athaliana7.chr1.fa.gz
 p=95
 s=5000
 n=7
@@ -93,7 +93,7 @@ sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_
 
 
 # Soy
-f=/lizardfs/guarracino/pggb-paper/sequences/soy37.chr18.fa.gz
+f=/lizardfs/guarracino/pggb-paper/assemblies/soy37.chr18.fa.gz
 p=95
 s=5000
 n=37
@@ -106,7 +106,7 @@ sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_
 
 
 # Tomato
-f=/lizardfs/guarracino/pggb-paper/sequences/tomato23.chr2.fa.gz
+f=/lizardfs/guarracino/pggb-paper/assemblies/tomato23.chr2.fa.gz
 p=95
 s=5000
 n=23
@@ -119,7 +119,7 @@ sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_
 
 
 # Yeast
-f=/lizardfs/guarracino/pggb-paper/sequences/scerevisiae8.fa.gz
+f=/lizardfs/guarracino/pggb-paper/assemblies/scerevisiae8.fa.gz
 p=95
 s=5000
 n=8
@@ -132,7 +132,7 @@ sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; bash $gfa2evaluation $out_
 
 
 # E. coli
-f=/lizardfs/guarracino/pggb-paper/sequences/ecoli100.fa.gz
+f=/lizardfs/guarracino/pggb-paper/assemblies/ecoli100.fa.gz
 p=90
 s=5000
 n=100
