@@ -3,11 +3,12 @@
 Run `pggb` and the Nucmer-based evaluation:
 
 ```shell
-# Paths
+# Path to set according to your folders
 out_folder_graphs=/lizardfs/guarracino/pggb-paper/graphs
-gfa2evaluation=/lizardfs/guarracino/pggb-paper/scripts/gfa2evaluation.sh
 
-# Fixed parameters
+
+# Fixed path and parameters
+gfa2evaluation=/lizardfs/guarracino/pggb-paper/scripts/gfa2evaluation.sh
 t=48
 POA=asm5
 O=0.001
@@ -21,7 +22,7 @@ n=90
 k=79
 G=700,900,1100
 ref=chm13
-out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.F0001.k$k.G$(echo $G | tr ',' '-').$ref
+out=$(basename "$f" .fa.gz)_p$p.s$s.n$n.k$k.G$(echo $G | tr ',' '-').$ref
 sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n $n -k $k -P $POA -O $O -G $G -t $t -o $out; bash $gfa2evaluation $out/*.final.gfa $ref $out/evaluation $t; mv $out $out_folder_graphs"
 
 
