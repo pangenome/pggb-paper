@@ -14,9 +14,9 @@
 PATH_GFA=$1
 PREFIX_REFERENCE=$2
 DIR_OUTPUT=$3
-PATH_VCF_PREPROCESS=$4
-PATH_NUCMER_2_VCF=$5
-THREADS=$6
+PATH_VCF_PREPROCESS=/home/guarracino/tools/pggb/scripts/vcf_preprocess.sh
+PATH_NUCMER_2_VCF=/home/guarracino/tools/pggb/scripts/nucmer2vcf.R
+THREADS=48
 
 PREFIX=$(basename "$PATH_GFA" .gfa)
 
