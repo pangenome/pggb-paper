@@ -208,9 +208,9 @@ zgrep '#CHROM' "$PATH_VCF".gz -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPL
 
   # xargs trims whitespaces
   grep None vcfeval/haplo/"$HAPLO"/summary.txt | tr -s ' ' | xargs | cut -f 2,3,4,5,6,7,8,9 -d ' ' | tr ' ' '\t' | \
-    awk -v haplo=$HAPLO -v nucmer=$NUM_VARIANTS_NUCMER_TOTAL -v pggb=$NUM_VARIANTS_PGGB_TOTAL -v nucmereval=$NUM_VARIANTS_NUCMER_EVALUATED -v pggbeval=$NUM_VARIANTS_PGGB_EVALUATED -v OFS='\t' '{print(haplo, $0, nucmer, pggb, nucmereval/nucmer, pggbeval/pggb)}' >> haplo.statistics.tsv
+    awk -v haplo=$HAPLO -v nucmer=$NUM_VARIANTS_NUCMER_TOTAL -v pggb=$NUM_VARIANTS_PGGB_TOTAL -v nucmereval=$NUM_VARIANTS_NUCMER_EVALUATED -v pggbeval=$NUM_VARIANTS_PGGB_EVALUATED -v OFS='\t' '{print(haplo, $0, nucmer, pggb, nucmereval/nucmer, pggbeval/pggb)}' >> statistics.haplo.tsv
   grep None vcfeval/haplo.waved/"$HAPLO"/summary.txt |  tr -s ' ' | xargs | cut -f 2,3,4,5,6,7,8,9 -d ' ' | tr ' ' '\t' | \
-      awk -v haplo=$HAPLO -v nucmer=$NUM_VARIANTS_NUCMER_TOTAL -v pggb=$NUM_VARIANTS_PGGB_WAVED_TOTAL -v nucmereval=$NUM_VARIANTS_NUCMER_WAVED_EVALUATED -v pggbeval=$NUM_VARIANTS_PGGB_WAVED_EVALUATED -v OFS='\t' '{print(haplo, $0, nucmer, pggb, nucmereval/nucmer, pggbeval/pggb)}' >> haplo.waved.statistics.tsv
+      awk -v haplo=$HAPLO -v nucmer=$NUM_VARIANTS_NUCMER_TOTAL -v pggb=$NUM_VARIANTS_PGGB_WAVED_TOTAL -v nucmereval=$NUM_VARIANTS_NUCMER_WAVED_EVALUATED -v pggbeval=$NUM_VARIANTS_PGGB_WAVED_EVALUATED -v OFS='\t' '{print(haplo, $0, nucmer, pggb, nucmereval/nucmer, pggbeval/pggb)}' >> statistics.haplo.waved.tsv
 done
 
 mkdir -p "$DIR_OUTPUT"
