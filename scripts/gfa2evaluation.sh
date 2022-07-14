@@ -178,8 +178,8 @@ done
 
 echo "--- Collect statistics"
 
-echo haplotype tp.baseline tp.call fp fn precision recall f1.score nucmer.tot pggb.tot nucmer.ratio pggb.ratio | tr ' ' '\t' > haplo.statistics.tsv
-echo haplotype tp.baseline tp.call fp fn precision recall f1.score nucmer.tot pggb.tot nucmer.ratio pggb.ratio | tr ' ' '\t' > haplo.waved.statistics.tsv
+echo haplotype tp.baseline tp.call fp fn precision recall f1.score nucmer.tot pggb.tot nucmer.ratio pggb.ratio | tr ' ' '\t' > statistics.haplo.tsv
+echo haplotype tp.baseline tp.call fp fn precision recall f1.score nucmer.tot pggb.tot nucmer.ratio pggb.ratio | tr ' ' '\t' > statistics.haplo.waved.tsv
 zgrep '#CHROM' "$PATH_VCF".gz -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPLO; do
   echo "$HAPLO"
 
