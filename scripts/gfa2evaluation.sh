@@ -185,7 +185,7 @@ zgrep '#CHROM' "$PATH_VCF".gz -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPL
 
   PATH_NUCMER_VCF=nucmer/"$HAPLO".vcf.gz
   PATH_PGGB_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo."$HAPLO".max1.vcf.gz
-  PATH_PGGB_WAVED_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.waved."$HAPLO".max1.vcf.gz
+  PATH_PGGB_WAVED_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.waved.fixed."$HAPLO".max1.vcf.gz
 
   NUM_VARIANTS_NUCMER_TOTAL=$(zgrep '^#' -vc "$PATH_NUCMER_VCF")
   NUM_VARIANTS_PGGB_TOTAL=$(zgrep '^#' -vc "$PATH_PGGB_VCF")
