@@ -214,4 +214,4 @@ zgrep '#CHROM' "$PATH_VCF".gz -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPL
 done
 
 mkdir -p "$DIR_OUTPUT"
-mv "$PREFIX"* haplo*tsv nucmer vcfeval "$DIR_OUTPUT"
+mv "$PREFIX"* statistics.haplo*.tsv nucmer vcfeval "$DIR_OUTPUT"
