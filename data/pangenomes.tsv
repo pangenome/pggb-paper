@@ -1,4 +1,4 @@
-path.fasta.gz p s n k G POA O
+path.fasta.gz p s n k G POA O ref
 /lizardfs/guarracino/pggb-paper/assemblies/hsapiens90.chr6.masked.fa.gz 98 10000 90 79 700,900,1100 asm5 0.001 chm13
 /lizardfs/guarracino/pggb-paper/assemblies/mouse17.chr19.fa.gz 98 5000 17 79 700,900,1100 asm5 0.001 GRCm39
 /lizardfs/guarracino/pggb-paper/assemblies/rat32.chr1.fa.gz 98 5000 32 79 700,900,1100 asm5 0.001 rn7
