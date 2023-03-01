@@ -54,7 +54,7 @@ grep '^#' "$PATH_VCF" -v | sed "s/^$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g" >> x
 mv x.vcf "$PATH_VCF"
 bgzip -@ "$THREADS" "$PATH_VCF"
 
-vcfbub -l 0 -a 100000 --input "$PATH_VCF".gz | vcfwave -I 1000 -t "$THREADS" | bgzip -c -@ "$THREADS" > "$PATH_WAVED_VCF".gz
+vcfbub -l 0 -a 10000 --input "$PATH_VCF".gz | vcfwave -I 1000 -t "$THREADS" | bgzip -c -@ "$THREADS" > "$PATH_WAVED_VCF".gz
 
 # The TYPE info sometimes is wrong/missing
 # There are variants without the ALT allele
