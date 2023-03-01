@@ -1,0 +1,11 @@
+path.fasta.gz p s n k G POA O
+/lizardfs/guarracino/pggb-paper/assemblies/hsapiens90.chr6.masked.fa.gz 98 10000 90 79 700,900,1100 asm5 0.001
+/lizardfs/guarracino/pggb-paper/assemblies/mouse17.chr19.fa.gz 98 5000 17 79 700,900,1100 asm5 0.001
+/lizardfs/guarracino/pggb-paper/assemblies/rat32.chr1.fa.gz 98 5000 32 79 700,900,1100 asm5 0.001
+/lizardfs/guarracino/pggb-paper/assemblies/primates4.chr6.fa.gz 95 5000 4 79 700,900,1100 asm5 0.001
+/lizardfs/guarracino/pggb-paper/assemblies/primates4.chr7.fa.gz 95 5000 4 79 700,900,1100 asm5 0.001
+/lizardfs/guarracino/pggb-paper/assemblies/athaliana7.chr1.fa.gz 95 5000 7 47 700,900,1100 asm5 0.001
+/lizardfs/guarracino/pggb-paper/assemblies/soy37.chr18.fa.gz 95 5000 37 47 700,900,1100 asm5 0.001
+/lizardfs/guarracino/pggb-paper/assemblies/tomato23.chr2.fa.gz 95 5000 23 47 700,900,1100 asm5 0.001
+/lizardfs/guarracino/pggb-paper/assemblies/scerevisiae8.fa.gz 95 5000 8 47 700,900,1100 asm5 0.001
+/lizardfs/guarracino/pggb-paper/assemblies/ecoli100.fa.gz 90 5000 100 47 700,900,1100 asm5 0.001
