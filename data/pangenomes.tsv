@@ -8,4 +8,4 @@ path.fasta.gz p s n k G POA O ref
 /lizardfs/guarracino/pggb-paper/assemblies/soy37.chr18.fa.gz 95 5000 37 47 700,900,1100 asm5 0.001 ZH13
 /lizardfs/guarracino/pggb-paper/assemblies/tomato23.chr2.fa.gz 95 5000 23 47 700,900,1100 asm5 0.001 SL5
 /lizardfs/guarracino/pggb-paper/assemblies/scerevisiae8.fa.gz 95 5000 8 47 700,900,1100 asm5 0.001 SGDref
-/lizardfs/guarracino/pggb-paper/assemblies/ecoli50.fa.gz 90 5000 100 47 700,900,1100 asm5 0.001 GCF_019614135.1
+/lizardfs/guarracino/pggb-paper/assemblies/ecoli50.fa.gz 90 5000 50 47 700,900,1100 asm5 0.001 GCF_019614135.1
