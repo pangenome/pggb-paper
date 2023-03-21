@@ -21,6 +21,8 @@ for line in sys.stdin:
                 suffix='-mapping'
             else:
                 suffix='-alignment'
+        elif 'odgi' in line_list[0]:
+            suffix = '-' + line_list[1]
         else:
             suffix = ''
         tool = line_list[0].split('/')[-1].split('-')[0]
