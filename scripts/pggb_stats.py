@@ -25,7 +25,7 @@ for line in sys.stdin:
             suffix = '-' + line_list[1]
         else:
             suffix = ''
-        tool = line_list[0].split('/')[-1].split('-')[0]
+        tool = line_list[0].split(':')[-1].split('/')[-1].split('-')[0]
 
     if dataset and runtime_s and memory_kb and tool:
         print(dataset, tool+suffix, runtime_s.rstrip('s'), 'runtime_s', sep = '\t')
