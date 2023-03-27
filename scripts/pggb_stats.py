@@ -28,8 +28,8 @@ for line in sys.stdin:
         tool = line_list[0].split(':')[-1].split('/')[-1].split('-')[0]
 
     if dataset and runtime_s and memory_kb and tool:
-        print(dataset, tool+suffix, runtime_s.rstrip('s'), 'runtime_s', sep = '\t')
-        print(dataset, tool+suffix, memory_kb.rstrip('Kb'), 'memory_Kb', sep = '\t')
+        # dataset, tool, runtime_s, memory_kb,
+        print(dataset, tool+suffix, runtime_s.rstrip('s'), memory_kb.rstrip('Kb'), sep = '\t')
         runtime_s = ''
         memory_kb = ''
         tool = ''
