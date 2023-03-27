@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="CMakePresetLoader">{
+  &quot;useNewFormat&quot;: true
+}</component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f3fbe033-61ae-4546-88c4-a7e8ac317df9" name="Changes" comment="typo">
+      <change beforePath="$PROJECT_DIR$/scripts/graph_statistics.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/small_variants_evaluation.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/workflows/0.Preparation.md" beforeDir="false" afterPath="$PROJECT_DIR$/workflows/0.Preparation.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workflows/1.PangenomeBuilding.md" beforeDir="false" afterPath="$PROJECT_DIR$/workflows/1.PangenomeBuilding.md" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="5z1e959r" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2MOCuIeIEgv0zq95tw8TxqVVYIy" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/guarracino/git/pggb-paper/workflows&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/workflows" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f3fbe033-61ae-4546-88c4-a7e8ac317df9" name="Changes" comment="" />
+      <created>1677629462448</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1677629462448</updated>
+      <workItem from="1677629463557" duration="2108000" />
+      <workItem from="1677635147578" duration="2703000" />
+      <workItem from="1677638998944" duration="367000" />
+      <workItem from="1677645552249" duration="199000" />
+      <workItem from="1677688567635" duration="599000" />
+      <workItem from="1677706160885" duration="5240000" />
+      <workItem from="1677723076558" duration="120000" />
+      <workItem from="1677723426419" duration="158000" />
+      <workItem from="1677774078969" duration="733000" />
+      <workItem from="1679078141082" duration="6000" />
+    </task>
+    <task id="LOCAL-00001" summary="add preparation and pangenomes.tsv">
+      <created>1677635764884</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1677635764884</updated>
+    </task>
+    <task id="LOCAL-00002" summary="add pangenome building">
+      <created>1677637132568</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1677637132568</updated>
+    </task>
+    <task id="LOCAL-00003" summary="add references and vcfbub -a 10k">
+      <created>1677707028206</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1677707028206</updated>
+    </task>
+    <task id="LOCAL-00004" summary="tweak">
+      <created>1677707628313</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1677707628313</updated>
+    </task>
+    <task id="LOCAL-00005" summary="missing header">
+      <created>1677708082229</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1677708082229</updated>
+    </task>
+    <task id="LOCAL-00006" summary="more tools and graph evaluation loop">
+      <created>1677710498218</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1677710498218</updated>
+    </task>
+    <task id="LOCAL-00007" summary="typo">
+      <created>1677723552272</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1677723552272</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="add preparation and pangenomes.tsv" />
+    <MESSAGE value="add pangenome building" />
+    <MESSAGE value="add references and vcfbub -a 10k" />
+    <MESSAGE value="tweak" />
+    <MESSAGE value="missing header" />
+    <MESSAGE value="more tools and graph evaluation loop" />
+    <MESSAGE value="typo" />
+    <option name="LAST_COMMIT_MESSAGE" value="typo" />
+  </component>
+</project>
