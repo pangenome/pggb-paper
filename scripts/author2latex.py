@@ -20,7 +20,7 @@ with open("PGGB Authors - Sheet1.tsv", newline='') as f:
         first_name = r['FirstName'].strip()
         email = r['Email'].strip()
         if middle:
-            first_name += ' ' + middle
+            first_name += ' ' + middle + '.'
         affiliation = r['Affiliations (Department, Organization, Street, City, Postcode, State, Country)'].strip()
         contribution = r['Contribution'].strip()
         rank = float(r["Rank"])
