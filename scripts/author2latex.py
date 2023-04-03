@@ -8,7 +8,8 @@ with open("PGGB Authors - Sheet1.tsv", newline='') as f:
     affiliation_dict, affiliation_dict_r = {}, {}
     affiliation_index = 1
     contribution_dict, contribution_dict_r = {}, {}
-    contribution_index = 1
+    #contribution_index = 1
+    contribution_index = {}
     authors = []
     authors_by_last_name = []
     funding = []
@@ -49,6 +50,7 @@ with open("PGGB Authors - Sheet1.tsv", newline='') as f:
         for contribution in contributions:
             if len(contribution) > 0:
                 if contribution not in contribution_dict:
+                    contribution_index[contribution] = len(contribution_dict)
                     contribution_dict[contribution] = []
                 contribution_dict[contribution].append(first_name + " " + last_name)
 
@@ -65,8 +67,19 @@ with open("PGGB Authors - Sheet1.tsv", newline='') as f:
         # First authors have rank < 1
         if rank < 1 and co_first:
             latex_code += "\equalcont{These authors contributed equally to this work.}\n"
-
+            
     for i in range(1, affiliation_index):
         latex_code += f"\\affil[{i}]{{{affiliation_dict_r[i]}}}\n"
 
     print(latex_code)
+
+    contributions_grouped = []
+    for contribution,people in contribution_dict.items():
+        contributions_grouped.append([contribution_index[contribution], contribution, people])
+    contributions_grouped.sort()
+    latex_code = ''
+    for i, contribution, people in contributions_grouped:
+        latex_code += "\emph{" + contribution + "}: " + ', '.join(people) + " \\\\ \n"
+        #print(contributions_grouped)
+    print(latex_code)
+
