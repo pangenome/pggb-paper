@@ -1,0 +1,6 @@
+https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_verkko_1.1-0.2-freeze/mGorGor1.dip.20221111.fasta.gz
+https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_verkko_1.1-0.1-freeze/mPanPan1.dip.20221111.fasta.gz
+https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_verkko_1.1-hic-freeze/mPanTro3.dip.20221111.fasta.gz
+https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_verkko_1.1-hic-freeze/mPonAbe1.dip.20221111.fasta.gz
+https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_verkko_1.1-hic-freeze/mPonPyg2.dip.20221111.fasta.gz
+https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_verkko_1.1-hic-freeze/mSymSyn1.dip.20221111.fasta.gz
