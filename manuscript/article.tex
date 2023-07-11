@@ -195,7 +195,7 @@
 
 \maketitle
 
-Pangenome graphs compactly represent complete genomes, their homologies, and all forms of variation between them \cite{Garrison_2018,Paten_2017,Garrison_2019,Eizenga2020}.
+Pangenome graphs compactly represent complete genomes, their homologies, and all forms of variation between them \cite{Garrison_2018,Eizenga2020}.
 They allow us to identify variation, measure conservation, detect recombination events, and infer phylogenetic relationships, making them valuable tools for studying sequence evolution and variation in diverse species \cite{Armstrong2020,Guarracino_odgi_2022}.
 However, existing methods for constructing pangenome graphs \cite{Li2020,Hickey_2023} are biased due to their reference and tree-guided approaches \cite{Armstrong2020,Noll_2022}, which can lead to incomplete and unstable representations of genetic variation \cite{Garrison_seqwish_2022}.
 Inductive biases result from techniques to mitigate computational complexity \cite{Li2020,Armstrong2020}, or from a goal to structure the resulting graphs so that they are easier to use during read alignment \cite{Hickey_2023}.
@@ -208,7 +208,7 @@ Although approaches for unbiased pangenome graph construction have been proposed
 	\caption{
       \textbf{PGGB and applications.}
       (A) PGGB’s algorithms/data flows.
-      Primary flow (red) proceeds from FASTA to alignment, graph induction, smoothing, to normalization with GFAF-FIX, ending with final graph (orange). Optional outputs (blue): statistics, variant calls, and 1D/2D graph visualizations.
+      Primary flow (red) proceeds from FASTA to alignment, graph induction, smoothing, to normalization, ending with final graph (orange). Optional outputs (blue): statistics, variant calls, and 1D/2D graph visualizations.
       (B) 1D pangenome graph visualization using 14 haplotype-resolved primate assemblies homologous to human chromosome 6.
       T2T-CHM13 annotations (Major Histocompatibility Complex, p-arm, centromere, q-arm) are shown.
       The p-arm region with the MHC is inverted in Gibbon.
@@ -227,7 +227,7 @@ Its output presents a base-level representation of the pangenome, including vari
 The graph is unbiased, i.e., all genomes are treated equivalently, regardless of input order or phylogenetic dependencies, and any genome may be used as a frame of reference in downstream analysis.
 PGGB makes no assumptions about phylogenetic relationships, orthology groups, or evolutionary histories, allowing data to speak for itself without risks of implicit biases that may affect inferences made from the graph.
 PGGB is implemented as a modular shell script, integrating independent components via standard text-based file formats, which provides a template for future pangenome construction methods.
-The method is practical, scalable to hundreds of genomes, and has been proven accurate through years of development in the Human Pangenome Reference Consortium (HPRC) \cite{Liao_2023,Guarracino_2023} and in the broader bioinformatics community \cite{crysnanto2022comparison,zhang2022fast,Leonard_2022,Zhou_2022}.
+The method is practical, scalable to hundreds of genomes, and has been proven accurate through years of development in the Human Pangenome Reference Consortium (HPRC) \cite{Liao_2023,Guarracino_2023} and in the broader bioinformatics community \cite{crysnanto2022comparison,Leonard_2022,Zhou_2022}.
 Here, we describe the specific innovations in the three main phases of the algorithm: alignment, graph creation, and graph normalization.
 We then use cross-validation with MUMMER4 \cite{Marcais_2018} to demonstrate the accuracy of our approach across a wide range of species and scales.
 
@@ -236,9 +236,10 @@ PGGB begins with sequence alignment (Figure \ref{fig:pggb}A).
 To avoid reference and order bias, PGGB uses an all-to-all alignment of the input sequences.
 This approach aligns sequences directly to each other, enabling each sequence in the pangenome to serve as a potential reference to describe variation.
 To obtain alignments, PGGB uses WFMASH \cite{Guarracino_wfmash_2021}.
-WFMASH first applies an extension of MASHMAP \cite{Jain_2018} to obtain high-level homology mappings, by default using seeds of 5kbp to find homologies of 25kbp or more at 90\% average nucleotide identity.
+WFMASH first %applies an extension of MASHMAP \cite{Jain_2018} to 
+obtain high-level homology mappings, by default using seeds of 5kbp to find homologies of 25kbp or more at 90\% average nucleotide identity.
 %MASHMAP provides highly efficient, accurate detection of homologies among genomes \cite{Jain_2018} and even across whole pangenomes \cite{Guarracino_2023}.
-WFMASH then uses a generalization of the bidirectional Wavefront Algorithm (BiWFA) \cite{Marco_Sola_2020,Marco_Sola_2023} that aligns the sequences by comparing segments of 256bp rather than single characters.
+Then, it uses a generalization of the bidirectional Wavefront Algorithm (BiWFA) \cite{Marco_Sola_2023} that aligns the sequences by comparing segments of 256bp rather than single characters.
 This algorithm, BiWF$\lambda$---so named because it replaces character match with a callback function $\lambda$ that matches segments---obtains a final base level alignment by splicing together ``incepted'' alignments over the 256bp segment pairs that lie in the optimal alignment path.
 Our use of WFMASH ensures that the alignments which structure the graph feature long-range collinearity that is insensitive to repetitive, shorter homologies found between transposons and satellite sequences.
 Although WFMASH alignments have an ideal structure for its operation, PGGB can build the graph using any set of user-defined alignments in PAF format.
@@ -304,7 +305,7 @@ A key issue is that pairwise alignments derived across input sequences are not m
 We mitigate this issue by removing short matches from SEQWISH's input alignments.
 This reduces complexity, but also creates a graph that can be locally ``under-aligned'' and does not represent all local pairwise relationships.
 To resolve this, we apply a local realignment kernel, partial order alignment (POA) \cite{Lee2002,Vaser_2017,Gao_2020}, across all parts of the graph.
-By default, we do so at a scale of around 1kbp, which is smaller than most nonlinear patterns of structural variation found in genomes \cite{Liao_2023,Vollger_2023}.
+By default, we do so at a scale of around 1kbp, which is smaller than most nonlinear patterns of structural variation found in genomes \cite{Liao_2023}.
 %This scale is configurable depending on the specifics of the species under study.
 This allows the PGGB graph to represent complex structurally-variable loci as simple loops through a single copy of duplicated sequences \cite{Liao_2023}.
 The kernel is applied to regions that are extracted from a 1-dimensional graph embedding \cite{Guarracino_odgi_2022}.
