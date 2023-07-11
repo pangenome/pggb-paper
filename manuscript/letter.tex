@@ -1,0 +1,105 @@
+\documentclass[12pt,hidelinks,letterpaper]{article}
+\usepackage[margin=0.75in,top=0.75in,footskip=0.5in]{geometry}
+\usepackage{comment}
+
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+% use Unicode characters - try changing the option if you run into troubles with special characters (e.g. umlauts)
+\usepackage[utf8]{inputenc}
+
+% clean citations
+\usepackage{cite}
+
+% hyperref makes references clicky. use \url{www.example.com} or \href{www.example.com}{description} to add a clicky url
+\usepackage{nameref,hyperref}
+
+% line numbers
+%\usepackage[right]{lineno}
+
+% improves typesetting in LaTeX
+\usepackage{microtype}
+\DisableLigatures[f]{encoding = *, family = * }
+
+% Remove % for double line spacing
+%\usepackage{setspace} 
+%\doublespacing
+
+% use adjustwidth environment to exceed text width (see examples in text)
+\usepackage{changepage}
+
+% use \textcolor{color}{text} for colored text (e.g. highlight to-do areas)
+\usepackage{color}
+
+% this is required to include graphics
+\usepackage{graphicx}
+
+% use for have text wrap around figures
+\usepackage{wrapfig}
+
+%\usepackage{setspace}
+%\doublespacing
+\usepackage{multicol}
+
+\pagenumbering{gobble}
+
+% document begins here
+\begin{document}
+
+
+\begin{flushright}
+  Erik Garrison \\
+  egarris5@uthsc.edu \\
+  Department of Genetics, Genomics and Informatics \\
+  University of Tennessee Health Science Center \\
+  71 S. Manassas Street, 4th Floor \\
+  Memphis, TN 38163, USA
+  %+1 502 382 6005 \\
+  %+39 320 244 2758 \\
+  %Vico San Pietro a Maiella, 6 \\
+  %80138 Napoli, NA, Italy
+\end{flushright}
+
+
+%\begin{flushleft}
+  % madlib: replace with address
+%  To whom it may concern,
+%\end{flushleft}
+
+%\hfill \break
+\hfill \break
+
+Dear Editors,
+\hfill \break
+
+It is my pleasure to submit our manuscript entitled ``Building Pangenome Graphs.''
+Herein, we describe the PanGenome Graph Builder (PGGB), a new method to construct pangenome graphs that meets many simultaneous objectives.
+PGGB is unbiased, or not dependent on input genome order or a chosen reference sequence.
+It provides highly accurate, fine-scale descriptions of the relationships between individual genomes.
+PGGB also presents a lossless model of the alignment of many whole genomes without any clipping of input genomes.
+This feature thus allows us to study chromosome-scale variation and recombination.
+PGGB models all parts of the genome in its output graph---even centromeres and satellite repeats, seamlessly exposing them to downstream analysis by any method based on the variation graph model.
+
+We have previously applied PGGB in the Human Pangenome Project to build pangenome graphs for the HPRC draft release (\textit{Nature} doi: 10.1038/s41586-023-05896-x).
+Unlike other HPRC methods (minigraph and minigraph-Cactus), PGGB is not reference based, and treats all included genomes equivalently.
+Cross-validation experiments in the HPRC main paper indicate that it does so without sacrificing any accuracy.
+PGGB's specific ability to work with many reference sequences at the same time was critical to its application to the discovery of recombination between heterologous acrocentric chromosomes, which we describe in a companion paper published alongside the main paper (\textit{Nature} doi: 10.1038/s41586-023-05976-y).
+
+PGGB is an integration of a collection of existing tools.
+This modular aspect and integration are thus the main focuses of our presentation, which we hope to target as a brief communication in Nature Biotechnology.
+In addition to an overview of the method's key innovations, we provide experimental results intended to indicate the wide applicability of PGGB.
+Using cross-validation with MUMMER, we are able to show that our method is achieving similar alignment quality to this established technique.
+We believe that the underlying model around which PGGB is based, the variation graph, can help to solve basic problems in population and comparative genomics, and we close with several examples to motivate this line of development.
+
+We would like to suggest a group of potential reviewers for our work: Benjamin Langmead langmea@cs.jhu.edu, Christina Boucher cboucher@cise.ufl.edu, Zamin Iqbal zi@ebi.ac.uk, Shilpa Garg sgarg@biosustain.dtu.dk, Hannes Pétur Eggertsson hannespetur@gmail.com, Paola Bonizzoni paola.bonizzoni@unimib.it, and Sean Eddy seaneddy@fas.harvard.edu.
+Authors of competing methods (such as minigraph and minigraph-cactus) may be conflicted as reviewers.
+
+\hfill \break
+\indent Regards,\\
+\hfill \break
+\includegraphics[width=0.28\textwidth]{signature_Erik_Garrison.pdf}
+\hfill \break
+\indent Erik Garrison
+
+
+\end{document}

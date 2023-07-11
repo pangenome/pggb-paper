@@ -12,22 +12,25 @@ sudo apt install latexmk
 
 git clone https://github.com/pangenome/pggb-paper
 cd pggb-paper/manuscript
-latexmk -pdf sn-article.tex
+#latexmk -pdf sn-article.tex
+pdflatex article && bibtex article && pdflatex article && pdflatex article
 ```
 
 ## submission guidelines
 
-From [here](https://www.nature.com/nbt/content):
+From [here](https://www.nature.com/nmeth/content):
 
-A Brief Communication reports a concise study of high quality and broad interest.
+### Brief Communication
+A Brief Communication is a concise report describing potentially groundbreaking yet preliminary method or tool developments, highly practical tweaks to an existing method or tool, software platforms, resources of broad interest, and technical critiques of widely used methodologies.
 
-Format
-- Brief unreferenced abstract – 3 sentences, up to 70 words, which will appear on Medline.
-- Title – up to 10 words (or 90 characters).
-- Main text – 1,000-1,500 words, including abstract, references and figure legends, and contains no headings.
-- Display items – up to 2 items, although this may be flexible at the discretion of the editor, provided the page limit is observed.
-- Online Methods section should be included
-- References – as a guideline, we typically recommend up to 20. Article titles are omitted from the reference list.
-- Brief Communications should include received/accepted dates.
-- Brief Communications may be accompanied by supplementary information.
-- Brief Communications are peer reviewed.
+#### Format
+
+Abstract – up to 70 words, unreferenced.
+Main text – 1,200 words (up to 1600 words with editorial discretion), including abstract, references and figure legends.
+The main text should not contain sections nor subheadings. 
+Display items – maximum 2 figures and/or tables (up to 3 items with editorial discretion).
+Online Methods section should be included and should contain subheadings.
+References – as a guideline, we typically recommend up to 20. 
+Brief Communications include received/accepted dates. 
+Brief Communications may be accompanied by supplementary information. 
+Brief Communications are peer reviewed.

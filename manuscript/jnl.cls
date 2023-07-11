@@ -1,10 +1,10 @@
 %%
-%% This is file `sn-jnl.cls',
+%% This is file `jnl.cls',
 %% generated with the docstrip utility.
 %%
 %% The original source files were:
 %%
-%% classes.dtx  (with options: `sn-jnl')
+%% classes.dtx  (with options: `jnl')
 %%
 %% This is a generated file.
 %%
@@ -52,7 +52,7 @@
 %%   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %%   Right brace   \}     Tilde         \~}
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
-\ProvidesClass{sn-jnl}
+\ProvidesClass{jnl}
               [2019/11/18 v0.1: An authoring template for Springer Journal articles]
 
 \newif\if@restonecol
@@ -67,13 +67,13 @@
 \newif\if@pdflatex\global\@pdflatexfalse%
 \newif\if@remarkboxon\global\@remarkboxonfalse%
 
-\newif\if@Spr@basic@refstyle\global\@Spr@basic@refstylefalse% 1.Basic Springer Nature Reference Style/Chemistry Reference Style -> sn-basic.bst
-\newif\if@Mathphys@refstyle\global\@Mathphys@refstylefalse% 2.Math and Physical Sciences Reference Style -> sn-mathphys.bst
-\newif\if@APS@refstyle\global\@APS@refstylefalse% 3.American Physical Society (APS) Reference Style -> sn-APS.bst
-\newif\if@Vancouver@refstyle\global\@Vancouver@refstylefalse% 4.Vancouver Reference Style -> sn-vancouver.bst
-\newif\if@APA@refstyle\global\@APA@refstylefalse% 5.APA-based Social Sciences/Psychology Reference Style -> sn-apacite.bst
-\newif\if@Chicago@refstyle\global\@Chicago@refstylefalse% 6.Chicago-based Humanities Reference Style -> sn-chicago.bst
-\newif\if@Standard@Nature@refstyle\global\@Standard@Nature@refstylefalse% 7.Standard Nature Research Style -> sn-nature.bst
+\newif\if@Spr@basic@refstyle\global\@Spr@basic@refstylefalse% 1.Basic Springer Nature Reference Style/Chemistry Reference Style -> basic.bst
+\newif\if@Mathphys@refstyle\global\@Mathphys@refstylefalse% 2.Math and Physical Sciences Reference Style -> mathphys.bst
+\newif\if@APS@refstyle\global\@APS@refstylefalse% 3.American Physical Society (APS) Reference Style -> APS.bst
+\newif\if@Vancouver@refstyle\global\@Vancouver@refstylefalse% 4.Vancouver Reference Style -> vancouver.bst
+\newif\if@APA@refstyle\global\@APA@refstylefalse% 5.APA-based Social Sciences/Psychology Reference Style -> apacite.bst
+\newif\if@Chicago@refstyle\global\@Chicago@refstylefalse% 6.Chicago-based Humanities Reference Style -> chicago.bst
+\newif\if@Standard@Nature@refstyle\global\@Standard@Nature@refstylefalse% 7.Standard Nature Research Style -> nature.bst
 \newif\if@Default@refstyle\global\@Default@refstylefalse% 8. default reference style - no bib/bst required
 
 %% Template Options
@@ -102,13 +102,13 @@
 \DeclareOption{pdflatex}{\global\@pdflatextrue}%
 \DeclareOption{remarkboxoff}{\global\@remarkboxonfalse}%
 
-\DeclareOption{sn-basic}{\global\@Spr@basic@refstyletrue}%
-\DeclareOption{sn-mathphys}{\global\@Mathphys@refstyletrue}%
-\DeclareOption{sn-aps}{\global\@APS@refstyletrue}%
-\DeclareOption{sn-vancouver}{\global\@Vancouver@refstyletrue}%
-\DeclareOption{sn-apa}{\global\@APA@refstyletrue}%
-\DeclareOption{sn-chicago}{\global\@Chicago@refstyletrue}%
-\DeclareOption{sn-standardnature}{\global\@Standard@Nature@refstyletrue}%
+\DeclareOption{basic}{\global\@Spr@basic@refstyletrue}%
+\DeclareOption{mathphys}{\global\@Mathphys@refstyletrue}%
+\DeclareOption{aps}{\global\@APS@refstyletrue}%
+\DeclareOption{vancouver}{\global\@Vancouver@refstyletrue}%
+\DeclareOption{apa}{\global\@APA@refstyletrue}%
+\DeclareOption{chicago}{\global\@Chicago@refstyletrue}%
+\DeclareOption{standardnature}{\global\@Standard@Nature@refstyletrue}%
 \DeclareOption{default}{\global\@Default@refstyletrue}%
 
 %%\ExecuteOptions{twosidecrop,crop,centre,info,croppage}
@@ -217,7 +217,7 @@
 %
 \if@iicol%
 %
-%% for double column used sn-medium design trim and page size %%
+%% for double column used medium design trim and page size %%
 %
 \setlength\paperwidth{193mm}%
 \setlength\paperheight{260mm}%
@@ -453,12 +453,13 @@
 \def\Artcatfont{\reset@font\fontsize{8bp}{10bp}\selectfont}%
 \def\Titlefont{\reset@font\fontsize{17bp}{22.5bp}\selectfont\titraggedcenter}%
 \def\SubTitlefont{\reset@font\fontsize{14bp}{16.5bp}\selectfont\titraggedcenter}%
-\def\Authorfont{\reset@font\fontsize{12bp}{14.5bp}\selectfont\boldmath\titraggedcenter}%
-\def\addressfont{\reset@font\fontsize{11bp}{13.5bp}\selectfont\titraggedcenter}%
+\def\Authorfont{\reset@font\fontsize{10.5bp}{11bp}\selectfont\boldmath\titraggedcenter}%
+\def\addressfont{\reset@font\fontsize{5bp}{6bp}\selectfont\titraggedcenter}%
+\def\emailfont{\reset@font\fontsize{8bp}{9bp}\selectfont\titraggedcenter}%
 \def\abstractheadfont{\reset@font\fontsize{9bp}{11bp}\bfseries\selectfont\titraggedcenter}%
 \def\abstractsubheadfont{\reset@font\fontsize{9bp}{11bp}\bfseries\selectfont}%
 \def\abstractfont{\reset@font\fontsize{9bp}{11bp}\selectfont\leftskip=24pt\rightskip=24pt}%
-\def\keywordfont{\reset@font\fontsize{8bp}{9.5bp}\selectfont\leftskip=24pt\rightskip=24pt plus0.5fill}%
+\def\keywordfont{\reset@font\fontsize{8bp}{8.5bp}\selectfont\leftskip=24pt\rightskip=24pt plus0.5fill}%
 \def\historyfont{\reset@font\fontsize{8bp}{9.5bp}\selectfont\leftskip=24pt\rightskip=24pt plus0.5fill}%
 
 %% Article Type
@@ -556,7 +557,7 @@
 \def\email#1{\global\advance\emailcnt by 1\relax%
 \if@corauemail%
    \g@addto@macro\corrauthemail{%
-   \setcounter{footnote}{0}%
+     \setcounter{footnote}{0}%
    \textcolor{blue}{#1};\ %
    }%
 \else%
@@ -613,7 +614,7 @@
      \stepcounter{affn}%
      \xdef\@currentlabel{\theaffn}%
      \jmkLabel{\theaffn}%
-     {\textsuperscript{#1}#2.\par} }%\theaffn
+     {\textsuperscript{#1}#2.} }%\theaffn
 }
 
 %% Address tagging 
@@ -662,7 +663,7 @@
 %
 %% Keywords
 \def\keywordname{Keywords}%
-\def\keywords#1{\ifx#1\empty\else\def\@keywords{\par\addvspace{10pt}{\keywordfont{\bfseries\keywordname:} #1\par}}\fi}%
+\def\keywords#1{\ifx#1\empty\else\def\@keywords{\par\addvspace{12pt}{\keywordfont{\bfseries\keywordname:} #1\par}}\fi}%
 \def\@keywords{}%
 
 %% PACs
@@ -745,7 +746,7 @@
 
 %% Article Header Definition
 \renewcommand{\@maketitle}{\newpage\null%
-    \if@remarkboxon\vbox to 0pt{\vspace*{-78pt}\hspace*{-18pt}\FMremark}\else\vskip21pt\fi%%\par%
+    \if@remarkboxon\vbox to 0pt{\vspace*{-78pt}\hspace*{-18pt}\FMremark}\else\vskip10pt\fi%%\par%
     \hsize\textwidth\parindent0pt%%%\vskip7pt%
     %% Aritle Type
     {\hbox to \textwidth{{\Artcatfont\ArtType\hfill}\par}}
@@ -763,17 +764,18 @@
     %% Aritle Authors, Address and Correspondings
     \ifnum\aucount>0
         \global\punctcount\aucount%
-        \vskip20pt%
+        \vskip12pt%
         \artauthors\par%%     authors and emails
         {\vskip7pt\addressfont\auaddress\par%%      corresponding adress
-	 \removelastskip\vskip24pt%
+	 \removelastskip\vskip10pt%
 	\ifnum\emailcnt>0\relax%
-           \ifx\corrauthemail\@empty\else{\ifnum\aucount>1*\fi}%
-	   Corresponding author(s). E-mail(s): \corrauthemail\par\fi%
+    \ifx\corrauthemail\@empty\else{\ifnum\aucount>1*\fi}%
+         \emailfont%
+	   Corresponding author. E-mail: \corrauthemail\par\fi%
 	   \ifx\authemail\@empty\else Contributing authors:\ \authemail\fi%
         \fi%
         \ifequalcont{\par$^{\dagger}$\@equalconttext\par}\fi%
-	 \removelastskip\vskip24pt%
+	 \removelastskip\vskip10pt%
         \ifpresentaddress{\par\@presentaddresstext\par}\fi%
 	}
      \fi%
@@ -788,7 +790,7 @@
     \fi%
     %%{\printhistory\par}%
     %%{\ifx\@motto\empty\else\@motto\fi}%
-    \removelastskip\vskip36pt\vskip0pt}%
+    \removelastskip\vskip14pt\vskip0pt}%
 
 %% Printing Article Header
 \renewcommand\maketitle{\par
@@ -849,11 +851,11 @@
       %%\def\@oddhead{{\headerfont\includegraphics{springer-nature-logo}\hfill\leftmark\qquad\thepage}}%
       \def\@evenhead{%
       \vbox to 0pt{\vspace*{-39pt}%
-         \hbox to \hsize{\hfill Springer Nature 2021 \LaTeX\ template\hfill}}\par%%
+         \hbox to \hsize{\hfill  \hfill}}\par%%
       \hspace*{-\textwidth}\hbox to \hsize{\headerfont\thepage\qquad\rightmark\hfill}}%
       \def\@oddhead{%
       \vbox to 0pt{\vspace*{-39pt}%
-         \hbox to \hsize{\hfill Springer Nature 2021 \LaTeX\ template\hfill}}\par%%
+         \hbox to \hsize{\hfill  \hfill}}\par%%
       \hspace*{-\textwidth}\hbox to \hsize{\headerfont\hfill\leftmark\qquad\thepage}}%
       \let\@mkboth\markboth%
       }%
@@ -878,7 +880,7 @@
      %%\let\@oddhead\@empty\let\@evenhead\@empty%
       \def\@oddhead{%
       \vbox to 0pt{\vspace*{-38pt}%
-         \hbox to \hsize{\hfill Springer Nature 2021 \LaTeX\ template\hfill}}}%%
+         \hbox to \hsize{\hfill  \hfill}}}%%
      \let\@evenhead\@oddhead%
      \def\@oddfoot{\vbox to 18pt{\vfill\reset@font\rmfamily\hfil\thepage\hfil}}%%
      \def\@evenfoot{}}%
@@ -1657,35 +1659,35 @@
 \if@Spr@basic@refstyle%
   \usepackage[authoryear]{natbib}%
   \gdef\NumBib{NO}%
-  \bibliographystyle{sn-basic}%
+  \bibliographystyle{basic}%
   \setlength{\bibsep}{1em}%
   \def\bibfont{\reset@font\fontfamily{\rmdefault}\normalsize\selectfont}%
 \fi%
 \if@Mathphys@refstyle%
   \usepackage[numbers,sort&compress]{natbib}%
   \gdef\NumBib{YES}%
-  \bibliographystyle{sn-mathphys}%
+  \bibliographystyle{mathphys}%
   \setlength{\bibsep}{1em}%
   \def\bibfont{\reset@font\fontfamily{\rmdefault}\normalsize\selectfont}%
 \fi%
 \if@APS@refstyle%
   \usepackage[numbers,sort&compress]{natbib}%
   \gdef\NumBib{YES}%
-  \bibliographystyle{sn-APS}%
+  \bibliographystyle{APS}%
   \setlength{\bibsep}{1em}%
   \def\bibfont{\reset@font\fontfamily{\rmdefault}\normalsize\selectfont}%
 \fi%
 \if@Vancouver@refstyle%
   \usepackage[numbers,sort&compress]{natbib}%
   \gdef\NumBib{YES}%
-  \bibliographystyle{sn-vancouver}%
+  \bibliographystyle{vancouver}%
   \setlength{\bibsep}{1em}%
   \def\bibfont{\reset@font\fontfamily{\rmdefault}\normalsize\selectfont}%
 \fi%
 \if@APA@refstyle%
   \usepackage[natbibapa]{apacite}%
   \gdef\NumBib{NO}%
-  \bibliographystyle{sn-apacite}%
+  \bibliographystyle{apacite}%
   \def\refdoi#1{\urlstyle{rm}\url{#1}}%
   \renewcommand{\doiprefix}{}%
   \AtBeginDocument{%
@@ -1697,7 +1699,7 @@
 \if@Chicago@refstyle%
   \usepackage[authoryear]{natbib}%
   \gdef\NumBib{NO}%
-  \bibliographystyle{sn-chicago}%
+  \bibliographystyle{chicago}%
   \hypersetup{urlcolor=black,colorlinks=false,pdfborder={0 0 0}}\urlstyle{same}%
   \setlength{\bibsep}{1em}%
   \def\bibfont{\reset@font\fontfamily{\rmdefault}\normalsize\selectfont}%
@@ -1705,7 +1707,7 @@
 \if@Standard@Nature@refstyle%
   \usepackage[numbers,sort&compress]{natbib}%
   \gdef\NumBib{YES}%
-  \bibliographystyle{sn-standardNature}%
+  \bibliographystyle{standardNature}%
   \setlength{\bibsep}{1em}%
   \def\bibfont{\reset@font\fontfamily{\rmdefault}\normalsize\selectfont}%
 \fi%
