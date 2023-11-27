@@ -2,7 +2,7 @@ path.fasta.gz p s n k G POA O ref
 /lizardfs/guarracino/pggb-paper/assemblies/hsapiens90.chr6.masked.fa.gz 98 10000 90 79 700,900,1100 asm5 0.001 chm13
 /lizardfs/guarracino/pggb-paper/assemblies/mouse17.chr19.fa.gz 98 5000 17 79 700,900,1100 asm5 0.001 GRCm39
 /lizardfs/guarracino/pggb-paper/assemblies/rat32.chr1.fa.gz 98 5000 32 79 700,900,1100 asm5 0.001 rn7
-/lizardfs/guarracino/tree_of_life_alignment/partitioning/primates14.chr6.fa.gz 90 5000 14 79 700,900,1100 asm5 0.001 GRC38
+/lizardfs/guarracino/pggb-paper/assemblies/primates16.hsa6.fa.gz 90 5000 16 47 700,900,1100 asm5 0.001 grch38
 /lizardfs/guarracino/pggb-paper/assemblies/athaliana7.chr1.fa.gz 95 5000 7 47 700,900,1100 asm5 0.001 TAIR10
 /lizardfs/guarracino/pggb-paper/assemblies/soy37.chr18.fa.gz 95 5000 37 47 700,900,1100 asm5 0.001 ZH13
 /lizardfs/guarracino/pggb-paper/assemblies/tomato23.chr2.fa.gz 95 5000 23 47 700,900,1100 asm5 0.001 SL5
