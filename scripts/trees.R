@@ -3,21 +3,21 @@ library(dendextend) # for tanglegram
 library(ape) # for phylogenetic analysis
 library(ggtree) # for phylogenetic tree plotting and annotation BiocManager::install("ggtree")
 
-path_dist_tsv <- '~/Desktop/trees/primates14.chr6.fa.gz.667b9b6.c2fac19.ee137be.smooth.final.1.dist.haplotype.tsv'
+path_dist_tsv <- '~/Desktop/primates16.hsa6_p90.s10000.n16.k47.G700-900-1100.Pasm5.O0001_1.dist.tsv'
 
 # Read matrices
 jaccard_dist_df <- read_tsv(path_dist_tsv) %>%
   #filter(! group.a %in% c('mSymSyn1#1', 'mSymSyn1#2')) %>%
   #filter(! group.b %in% c('mSymSyn1#1', 'mSymSyn1#2')) %>%
   arrange(group.a, group.b) %>%
-  mutate(jaccard=1-jaccard) %>%
-  select(group.a, group.b, jaccard) %>%
-  pivot_wider(names_from = group.b, values_from = jaccard) %>%
+  #mutate(jaccard=1-jaccard) %>%
+  select(group.a, group.b, jaccard.distance) %>%
+  pivot_wider(names_from = group.b, values_from = jaccard.distance) %>%
   column_to_rownames(var = "group.a")
 euclidean_dist_df <- read_tsv(path_dist_tsv) %>%
   arrange(group.a, group.b) %>%
-  select(group.a, group.b, euclidean) %>%
-  pivot_wider(names_from = group.b, values_from = euclidean) %>%
+  select(group.a, group.b, euclidean.distance) %>%
+  pivot_wider(names_from = group.b, values_from = euclidean.distance) %>%
   column_to_rownames(var = "group.a")
 
 jaccard_hc <- as.dist(jaccard_dist_df) %>% hclust()
