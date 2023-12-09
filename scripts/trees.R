@@ -3,7 +3,7 @@ library(dendextend) # for tanglegram
 library(ape) # for phylogenetic analysis
 library(ggtree) # for phylogenetic tree plotting and annotation BiocManager::install("ggtree")
 
-path_dist_tsv <- '~/Desktop/primates16.hsa6_p90.s10000.n16.k47.G700-900-1100.Pasm5.O0001_1.dist.tsv'
+path_dist_tsv <- '~/Desktop/pggb-paper/trees/primates16.hsa6_p95.s20000.n16.k79.G700-900-1100.Pasm5.O0001_1.haplotype.dist.tsv'
 
 # Read matrices
 jaccard_dist_df <- read_tsv(path_dist_tsv) %>%
@@ -28,7 +28,7 @@ plot(
   
   # Label at same height
   hang = -1,
-  main = 'primate14.chr6',
+  main = 'primates16.hsa6',
   xlab = 'Haplotype',
   ylab = 'Jaccard distance',
   sub = '',

@@ -192,7 +192,6 @@ zgrep '#CHROM' "$PATH_VCF".gz -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPL
   NUM_VARIANTS_PGGB_WAVED_TOTAL=$(zgrep '^#' -vc "$PATH_PGGB_WAVED_VCF")
 
   NUM_VARIANTS_NUCMER_TP=$(grep None vcfeval/haplo/"$HAPLO"/summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 3 -d ' ')
-
   NUM_VARIANTS_PGGB_TP=$(grep None vcfeval/haplo/"$HAPLO"/summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 4 -d ' ')
   FP=$(grep None vcfeval/haplo/"$HAPLO"/summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 5 -d ' ')
   FN=$(grep None vcfeval/haplo/"$HAPLO"/summary.txt | sed 's,/summary.txt:,,' | tr -s ' ' | cut -f 6 -d ' ')
