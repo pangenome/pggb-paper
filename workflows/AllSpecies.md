@@ -15,7 +15,7 @@ O=0.001
 
 
 # Homo sapiens
-f=/lizardfs/guarracino/pggb-paper/assemblies/hsapiens90.chr6.masked.fa.gz
+f=/lizardfs/guarracino/pggb-paper/assemblies/hsapiens/hsapiens90.chr6.masked.fa.gz
 p=98
 s=10000
 n=90
@@ -85,7 +85,7 @@ sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n 
 
 
 # Soy
-f=/lizardfs/guarracino/pggb-paper/assemblies/soy37.chr18.fa.gz
+f=/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr18.fa.gz
 p=95
 s=5000
 n=37
@@ -97,7 +97,7 @@ sbatch -c $t -p 386mem --wrap "hostname; cd /scratch; pggb -i $f -p $p -s $s -n 
 
 
 # Tomato
-f=/lizardfs/guarracino/pggb-paper/assemblies/tomato23.chr2.fa.gz
+f=/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr2.fa.gz
 p=95
 s=5000
 n=23
