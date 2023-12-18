@@ -44,7 +44,12 @@ plot(
   xlab = 'Haplotype',
   ylab = 'Jaccard distance',
   sub = '',
-  cex = 1.2
+  cex = 1.8,       # Adjusts the size of points/text in the plot
+  cex.lab = 1.6,   # Adjusts the size of x and y labels
+  cex.axis = 1.6,  # Adjusts the size of axis text
+  cex.main = 1.6,  # Adjusts the size of the main title
+  cex.sub = 1.6,    # Adjusts the size of the subtitle
+  lwd = 2  # Increases the width of the branch lines
 )
 dev.off() # Close the device
 
