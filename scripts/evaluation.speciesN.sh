@@ -8,7 +8,8 @@ DIR_OUTPUT=$4             # Directory for output
 PATH_REF_FASTA=$5         # Path to reference FASTA
 PATH_REF_SDF=$6           # Path to reference SDF
 DIR_TRUTH_VCF_AND_BED=$7  # Directory containing truth VCF and BED files
-CONDITIONS=("${@:8}")     # Additional conditions (e.g. ".confident-yes:PATH_TO_BED_GZ")
+TRUTH_VCF_PATTERN=$8      # Pattern for truth VCF filenames
+CONDITIONS=("${@:9}")     # Additional conditions (e.g. ".confident-yes:PATH_TO_BED_GZ")
 
 # Clean up
 rm -rf /scratch/$PREFIX
@@ -18,8 +19,13 @@ cd /scratch/$PREFIX || exit
 # Compare query/truth
 for SAMPLE in `zgrep '^#CHROM' $PATH_VCF_GZ -m 1 | cut -f 10- | tr '\t' '\n' | grep chm13 -v | tr '\n' ' '`; do
   echo $SAMPLE
-  PATH_TRUTH_VCF_GZ=$DIR_TRUTH_VCF_AND_BED/$SAMPLE.GRCh38_no_alt.deepvariant.pansn.vcf.gz
-
+  PATH_TRUTH_VCF_GZ=$DIR_TRUTH_VCF_AND_BED/${SAMPLE}$TRUTH_VCF_PATTERN
+  # Check if PATH_TRUTH_VCF_GZ exists
+  if [[ ! -f "$PATH_TRUTH_VCF_GZ" ]]; then
+      echo "Warning: File $PATH_TRUTH_VCF_GZ not found. Skipping $SAMPLE."
+      continue
+  fi
+  
   TRUTH_VCF_GZ=$(basename $PATH_TRUTH_VCF_GZ .vcf.gz).norm.max50.vcf.gz
   bash /lizardfs/guarracino/pggb-paper/scripts/vcf_preprocess.sh \
     $PATH_TRUTH_VCF_GZ \
