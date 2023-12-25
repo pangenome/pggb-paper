@@ -58,7 +58,7 @@ for SAMPLE in `zgrep '^#CHROM' $PATH_VCF_GZ -m 1 | cut -f 10- | tr '\t' '\n' | g
       
       YYY=" "
       if [[ -n "$BED_PATH" ]]; then
-          YYY="-e $BED_PATH "
+          YYY="--bed-regions $BED_PATH "
       fi
       
       echo "$SUFFIX $YYY"
@@ -69,7 +69,8 @@ for SAMPLE in `zgrep '^#CHROM' $PATH_VCF_GZ -m 1 | cut -f 10- | tr '\t' '\n' | g
         -b $TRUTH_VCF_GZ \
         -c $QUERY_VCF_GZ \
         $YYY-T 48 \
-        -o vcfeval/$SAMPLE$SUFFIX
+        -o vcfeval/$SAMPLE$SUFFIX \
+        -e <(bedtools intersect -a <(bedtools merge -d 1000 -i $TRUTH_VCF_GZ) -b <(bedtools merge -d 1000 -i $QUERY_VCF_GZ))
 
       # # SNVs
       # rtg vcfeval \
