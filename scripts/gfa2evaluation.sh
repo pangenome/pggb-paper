@@ -39,19 +39,41 @@ PATH_SED_GFA="$PREFIX".sed.gfa
 
 # sed replaces only the first instance on a line by default (without the /g modifier)
 # To have names like NA21309-1#1#JAHEPC010000450.1 and call haploid genotypes with -H
-sed 's/#/-/' "$PATH_GFA" | sed 's/#/#1#/' > "$PATH_SED_GFA"
+#sed 's/#/-/' "$PATH_GFA" | sed 's/#/#1#/' > "$PATH_SED_GFA"
+awk '{ gsub(/#/, "-", $0); gsub(/#/, "#1#", $0); print }' "$PATH_GFA" > "$PATH_SED_GFA"
+
 
 PATH_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.vcf
 PATH_WAVED_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.waved.vcf
 PATH_WAVED_FIXED_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.waved.fixed.vcf
 \time -v vg deconstruct -P "$PREFIX_REFERENCE" -H '#' -e -a -t "$THREADS" "$PATH_SED_GFA" > "$PATH_VCF"
-sed -i 's/#0//g' "$PATH_VCF" # Wrong PanSN-spec management in vg 1.41.0
+#sed -i 's/#0//g' "$PATH_VCF" # Wrong PanSN-spec management in vg 1.41.0
+awk '{ gsub(/#0/, ""); print }' "$PATH_VCF" > temp.vcf && mv temp.vcf "$PATH_VCF"
 
 # Revert names in the VCF files
-grep '^##' "$PATH_VCF" | sed "s/$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g" > x.vcf
-grep '^#CHROM' "$PATH_VCF" | sed 's/-/#/g' >> x.vcf
-grep '^#' "$PATH_VCF" -v | sed "s/^$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g" >> x.vcf
-mv x.vcf "$PATH_VCF"
+# grep '^##' "$PATH_VCF" | sed "s/$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g" > x.vcf
+# grep '^#CHROM' "$PATH_VCF" | sed 's/-/#/g' >> x.vcf
+# grep '^#' "$PATH_VCF" -v | sed "s/^$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g" >> x.vcf
+awk 'BEGIN {OFS=FS="\t"}
+     /^##/ { gsub(/'"$PREFIX_REFERENCE"'-1/, "'"$PREFIX_REFERENCE"'", $0); print; next }
+     /^#CHROM/ { gsub(/-/, "#", $0); print; next }
+     { gsub(/'"$PREFIX_REFERENCE"'-1/, "'"$PREFIX_REFERENCE"'", $0); print }' "$PATH_VCF" > x.vcf
+# Remove variants with empty genotypes (vg deconstruct has thig kind of bug)
+awk 'BEGIN { FS=OFS="\t" }
+     /^#/ { print; next }  # Always print header lines
+     {
+         empty_found = 0;
+         for (i = 10; i <= NF; i++) {
+             if ($i == "") {
+                 empty_found = 1;
+                 break;
+             }
+         }
+         if (!empty_found) {
+             print;
+         }
+     }' x.vcf > "$PATH_VCF"
+rm x.vcf
 bgzip -@ "$THREADS" -l 9 "$PATH_VCF"
 
 vcfbub -l 0 -a 10000 --input "$PATH_VCF".gz | vcfwave -I 1000 -t "$THREADS" | bgzip -@ "$THREADS" -l 9 > "$PATH_WAVED_VCF".gz
