@@ -92,4 +92,5 @@ done
 
 cd /scratch/
 mkdir -p $DIR_OUTPUT
+echo "mv /scratch/$PREFIX $DIR_OUTPUT"
 mv /scratch/$PREFIX $DIR_OUTPUT
