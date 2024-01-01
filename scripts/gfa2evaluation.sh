@@ -52,26 +52,20 @@ PATH_WAVED_FIXED_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.waved.fixed.vcf
 
 echo "--- Revert names and clean empty genotypes"
 # Revert names in the VCF files (and remove variants with empty genotypes (vg deconstruct has this kind of bug))
-# grep '^##' "$PATH_VCF" | sed "s/$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g" > x.vcf
-# grep '^#CHROM' "$PATH_VCF" | sed 's/-/#/g' >> x.vcf
+grep '^##' "$PATH_VCF" | sed "s/$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g" > x.vcf
+grep '^#CHROM' "$PATH_VCF" -m 1 | sed 's/-/#/g' >> x.vcf
 # grep '^#' "$PATH_VCF" -v | sed "s/^$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g" >> x.vcf
-awk 'BEGIN {OFS=FS="\t"}
-     /^##/ { gsub(/'"$PREFIX_REFERENCE"'-1/, "'"$PREFIX_REFERENCE"'", $0); print; next }
-     /^#CHROM/ { gsub(/-/, "#", $0); print; next }
-     { gsub(/'"$PREFIX_REFERENCE"'-1/, "'"$PREFIX_REFERENCE"'", $0); print }' "$PATH_VCF" | awk 'BEGIN { FS=OFS="\t" }
-     /^#/ { print; next }  # Always print header lines
-     {
-         empty_found = 0;
-         for (i = 10; i <= NF; i++) {
-             if ($i == "") {
-                 empty_found = 1;
-                 break;
-             }
-         }
-         if (!empty_found) {
-             print;
-         }
-     }' > x.vcf
+
+echo "--- Process variants with empty genotypes"
+# Process the body of the file in parallel
+grep '^#' "$PATH_VCF" -v | split -l 1000 - $PREFIX-body_chunk_
+ls $PREFIX-body_chunk_* | parallel -j 24 "sed -e 's/^$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g' -e '/\t\t/d' -e '/\t$/d' {} > $PREFIX-{}.processed"
+cat $PREFIX-*.processed | sort -k 1,1V -k 2,2n -T /scratch >> x.vcf
+rm $PREFIX-body_chunk_* $PREFIX-*.processed # Clean up
+
+ls $PREFIX-body_chunk_* | while read f; do echo $f; sed -e 's/^$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g' -e '/\t\t/d' -e '/\t$/d' $f > $f.processed; done
+
+
 mv x.vcf "$PATH_VCF"
 bgzip -@ "$THREADS" -l 9 "$PATH_VCF"
 
