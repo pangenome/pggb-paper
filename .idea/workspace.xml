@@ -15,8 +15,9 @@
     <list default="true" id="f3fbe033-61ae-4546-88c4-a7e8ac317df9" name="Changes" comment="typo">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/pangenomes.tsv" beforeDir="false" afterPath="$PROJECT_DIR$/data/pangenomes.tsv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/trees.R" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/trees.R" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workflows/0.Preparation.md" beforeDir="false" afterPath="$PROJECT_DIR$/workflows/0.Preparation.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/workflows/1.PangenomeBuilding.md" beforeDir="false" afterPath="$PROJECT_DIR$/workflows/1.PangenomeBuilding.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workflows/2.Evaluation.md" beforeDir="false" afterPath="$PROJECT_DIR$/workflows/2.Evaluation.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,6 +91,8 @@
       <workItem from="1701822634922" duration="626000" />
       <workItem from="1701884609542" duration="266000" />
       <workItem from="1702043736058" duration="8000" />
+      <workItem from="1703260971000" duration="523000" />
+      <workItem from="1703448199055" duration="3000" />
     </task>
     <task id="LOCAL-00001" summary="add preparation and pangenomes.tsv">
       <created>1677635764884</created>
