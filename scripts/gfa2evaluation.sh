@@ -58,13 +58,10 @@ grep '^#CHROM' "$PATH_VCF" -m 1 | sed 's/-/#/g' >> x.vcf
 
 echo "--- Process variants with empty genotypes"
 # Process the body of the file in parallel
-grep '^#' "$PATH_VCF" -v | split -l 1000 - $PREFIX-body_chunk_
+grep '^#' "$PATH_VCF" -v | split --line-bytes=10M - $PREFIX-body_chunk_ #split -l 1000
 ls $PREFIX-body_chunk_* | parallel -j 24 "sed -e 's/^$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g' -e '/\t\t/d' -e '/\t$/d' {} > $PREFIX-{}.processed"
 cat $PREFIX-*.processed | sort -k 1,1V -k 2,2n -T /scratch >> x.vcf
 rm $PREFIX-body_chunk_* $PREFIX-*.processed # Clean up
-
-ls $PREFIX-body_chunk_* | while read f; do echo $f; sed -e 's/^$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g' -e '/\t\t/d' -e '/\t$/d' $f > $f.processed; done
-
 
 mv x.vcf "$PATH_VCF"
 bgzip -@ "$THREADS" -l 9 "$PATH_VCF"
