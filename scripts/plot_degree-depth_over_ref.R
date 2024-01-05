@@ -2,7 +2,7 @@
 library(ggplot2)
 
 # Assuming your data is in a file named 'data.txt'
-data <- read.table('/home/guarracino/Desktop/hsapiens90.chr6.masked_p98.s20000.n90.k47.G700-900-1100.Pasm5.O0001_1.degree-depth.chm13.10kbp.tsv', header = T, sep = '\t', comment.char = "?")
+data <- read.table('/home/guarracino/Desktop/pggb-paper/hsapiens90.chr6.masked_p98.s20000.n90.k47.G700-900-1100.Pasm5.O0001_1.degree-depth.chm13.10kbp.tsv', header = T, sep = '\t', comment.char = "?")
 
 options(scipen=10000)
 
