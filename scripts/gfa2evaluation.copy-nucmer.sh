@@ -7,7 +7,7 @@
 #     /lizardfs/guarracino/day2_hsapiens/graphs/chr20.pan/chr20.pan.fa.gz.254a7b3.04f1c29.5486fb6.smooth.final.gfa \
 #     chm13 \
 #     out \
-#     48
+#     48 ...\nucmer
 
 PATH_VCF_PREPROCESS=/home/guarracino/tools/pggb/scripts/vcf_preprocess.sh
 PATH_NUCMER_2_VCF=/home/guarracino/tools/pggb/scripts/nucmer2vcf.R
@@ -46,15 +46,28 @@ PATH_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.vcf
 PATH_WAVED_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.waved.vcf
 PATH_WAVED_FIXED_VCF="$PREFIX"."$PREFIX_REFERENCE".haplo.waved.fixed.vcf
 \time -v vg deconstruct -P "$PREFIX_REFERENCE" -H '#' -e -a -t "$THREADS" "$PATH_SED_GFA" > "$PATH_VCF"
-sed -i 's/#0//g' "$PATH_VCF" # Wrong PanSN-spec management in vg 1.41.0
 
-# Revert names in the VCF files
+# Not necessary anymore. Wrong PanSN-spec management in vg 1.41.0
+# - with sed: sed -i 's/#0//g' "$PATH_VCF" <-- It can lead to 'sed: regex input buffer length larger than INT_MAX'
+# - with awk: awk '{ gsub(/#0/, ""); print }' "$PATH_VCF" > temp.vcf && mv temp.vcf "$PATH_VCF"
+
+echo "--- Revert names and clean empty genotypes"
+# Revert names in the VCF files (and remove variants with empty genotypes (vg deconstruct has this kind of bug))
 grep '^##' "$PATH_VCF" | sed "s/$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g" > x.vcf
-grep '^#CHROM' "$PATH_VCF" | sed 's/-/#/g' >> x.vcf
-grep '^#' "$PATH_VCF" -v | sed "s/^$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g" >> x.vcf
+grep '^#CHROM' "$PATH_VCF" -m 1 | sed 's/-/#/g' >> x.vcf
+# grep '^#' "$PATH_VCF" -v | sed "s/^$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g" >> x.vcf
+
+echo "--- Process variants with empty genotypes"
+# Process the body of the file in parallel
+grep '^#' "$PATH_VCF" -v | split --line-bytes=10M - $PREFIX-body_chunk_ #split -l 1000
+ls $PREFIX-body_chunk_* | parallel -j 24 "sed -e 's/^$PREFIX_REFERENCE-1/$PREFIX_REFERENCE/g' -e '/\t\t/d' -e '/\t$/d' {} > $PREFIX-{}.processed"
+cat $PREFIX-*.processed | sort -k 1,1V -k 2,2n -T /scratch >> x.vcf
+rm $PREFIX-body_chunk_* $PREFIX-*.processed # Clean up
+
 mv x.vcf "$PATH_VCF"
 bgzip -@ "$THREADS" -l 9 "$PATH_VCF"
 
+echo "--- Variant decomposition"
 vcfbub -l 0 -a 10000 --input "$PATH_VCF".gz | vcfwave -I 1000 -t "$THREADS" | bgzip -@ "$THREADS" -l 9 > "$PATH_WAVED_VCF".gz
 
 # The TYPE info sometimes is wrong/missing
@@ -107,7 +120,7 @@ zgrep '#CHROM' "$PATH_VCF".gz -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPL
       -b "$PATH_NUCMER_VCF" \
       -c "$PATH_PGGB_VCF" \
       -T "$THREADS" \
-      -e <(bedtools intersect -a <(bedtools merge -d $dist -i "$PATH_NUCMER_VCF" ) -b <(bedtools merge -d $dist -i "$PATH_PGGB_VCF")) \
+      -e <(bedtools intersect -a <(bedtools merge -d $dist -i "$PATH_NUCMER_VCF") -b <(bedtools merge -d $dist -i "$PATH_PGGB_VCF") | bedtools subtract -a stdin -b <(echo "GCA_028009825.2#1#CP116281.2\t0\t5314359\nGCA_028009825.2#1#CP116283.2\t0\t3829980")) \
       -o vcfeval/haplo/"$HAPLO"
 
   rtg vcfeval \
@@ -115,7 +128,7 @@ zgrep '#CHROM' "$PATH_VCF".gz -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPL
       -b "$PATH_NUCMER_VCF" \
       -c "$PATH_PGGB_WAVED_VCF" \
       -T "$THREADS" \
-      -e <(bedtools intersect -a <(bedtools merge -d $dist -i "$PATH_NUCMER_VCF" ) -b <(bedtools merge -d $dist -i "$PATH_PGGB_WAVED_VCF")) \
+      -e <(bedtools intersect -a <(bedtools merge -d $dist -i "$PATH_NUCMER_VCF") -b <(bedtools merge -d $dist -i "$PATH_PGGB_WAVED_VCF") | bedtools subtract -a stdin -b <(echo "GCA_028009825.2#1#CP116281.2\t0\t5314359\nGCA_028009825.2#1#CP116283.2\t0\t3829980")) \
       -o vcfeval/haplo.waved/"$HAPLO"
 done
 
