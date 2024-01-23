@@ -7,7 +7,7 @@
 #     /lizardfs/guarracino/day2_hsapiens/graphs/chr20.pan/chr20.pan.fa.gz.254a7b3.04f1c29.5486fb6.smooth.final.gfa \
 #     chm13 \
 #     out \
-#     48
+#     48 ...\nucmer
 
 PATH_VCF_PREPROCESS=/home/guarracino/tools/pggb/scripts/vcf_preprocess.sh
 PATH_NUCMER_2_VCF=/home/guarracino/tools/pggb/scripts/nucmer2vcf.R
@@ -16,6 +16,7 @@ PATH_GFA=$1
 PREFIX_REFERENCE=$2
 DIR_OUTPUT=$3
 THREADS=$4
+DIR_NUCMER_TO_COPY=$5
 
 
 
@@ -92,69 +93,11 @@ zgrep '#CHROM' "$PATH_VCF".gz -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPL
 done
 
 echo "Identify variants with nucmer"
-NUCMER_VERSION="xxx"
-mkdir -p nucmer
+cp -r "$DIR_NUCMER_TO_COPY" .
 
 echo "--- Align each contig against the reference"
-cut -f 1 "$PATH_SEQUENCES_FA_GZ".fai | grep "^${PREFIX_REFERENCE}#" -v | while read CONTIG; do
-  echo "$CONTIG"
-
-  PREFIX=nucmer/"$CONTIG"
-  samtools faidx "$PATH_SEQUENCES_FA_GZ" "$CONTIG" > "$PREFIX".fa
-  echo "$PREFIX" >> tmp
-done
-
-cat tmp | parallel -j "$THREADS" "nucmer $PATH_REF_FA {}.fa --prefix {}"
-rm tmp
-
 echo "--- Generate VCF files"
-cut -f 1 "$PATH_SEQUENCES_FA_GZ".fai | grep "^${PREFIX_REFERENCE}#" -v | while read CONTIG; do
-  echo "$CONTIG"
-
-  PREFIX=nucmer/"$CONTIG"
-  show-snps -THC "$PREFIX".delta > "$PREFIX".var.txt
-  #show-snps -TH "$PREFIX".delta | cut -f 1-6,9-12 > "$PREFIX".var.txt # For taking also variants from ambiguous alignments
-
-  # Check if there are variants
-  if [[ $(wc -l "$PREFIX".var.txt | cut -f 1 -d\ ) != 0 ]]; then
-    Rscript "$PATH_NUCMER_2_VCF" "$PREFIX".var.txt "$CONTIG" "$PATH_REF_FA" "$NUCMER_VERSION" "$PREFIX".vcf
-    bgzip -@ "$THREADS" -l 9 "$PREFIX".vcf
-    tabix "$PREFIX".vcf.gz
-  fi
-done
-
 echo "--- Merge variants by haplotype"
-zgrep '#CHROM' "$PATH_VCF".gz -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPLO; do
-  echo "$HAPLO"
-
-  grep "^$HAPLO" "$PATH_SEQUENCES_FA_GZ".fai | cut -f 1 | while read CONTIG; do
-    echo "$CONTIG"
-
-    PREFIX=nucmer/"$CONTIG"
-    PATH_VCF=$PREFIX.vcf.gz
-    if [[ -f "$PATH_VCF" ]]; then
-      # Check if there are valid variants
-      if [[ $(zgrep '^#' "$PATH_VCF" -v | grep "^$REF_PREFIX" | wc -l) != 0 ]]; then
-        echo "$PATH_VCF" >> "$HAPLO".x.txt
-      fi
-    fi
-  done
-
-  bcftools concat \
-    --file-list "$HAPLO".x.txt \
-    --naive-force | \
-    bcftools reheader --samples <(echo "$HAPLO") > nucmer/"$HAPLO".unsorted.vcf.gz
-  rm "$HAPLO".x.txt
-
-  #bcftools sort $HAPLO.unsorted.vcf.gz > $HAPLO.vcf.gz # It doesn't work
-  zgrep "^#" nucmer/"$HAPLO".unsorted.vcf.gz > nucmer/"$HAPLO".tmp.vcf
-  zgrep -v "^#" nucmer/"$HAPLO".unsorted.vcf.gz | sort -k 1,1V -k 2,2n -T /scratch >> nucmer/"$HAPLO".tmp.vcf
-  vcfuniq nucmer/"$HAPLO".tmp.vcf > nucmer/"$HAPLO".vcf
-  bgzip -@ "$THREADS" -l 9 nucmer/"$HAPLO".vcf
-  tabix nucmer/"$HAPLO".vcf.gz
-
-  rm nucmer/"$HAPLO".unsorted.vcf.gz nucmer/"$HAPLO".tmp.vcf
-done
 
 echo "Variant evaluation"
 echo "--- Prepare the reference in SDF format"
@@ -177,7 +120,7 @@ zgrep '#CHROM' "$PATH_VCF".gz -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPL
       -b "$PATH_NUCMER_VCF" \
       -c "$PATH_PGGB_VCF" \
       -T "$THREADS" \
-      -e <(bedtools intersect -a <(bedtools merge -d $dist -i "$PATH_NUCMER_VCF" ) -b <(bedtools merge -d $dist -i "$PATH_PGGB_VCF")) \
+      -e <(bedtools intersect -a <(bedtools merge -d $dist -i "$PATH_NUCMER_VCF") -b <(bedtools merge -d $dist -i "$PATH_PGGB_VCF") | bedtools subtract -a stdin -b <(echo "GCA_028009825.2#1#CP116281.2\t0\t5314359\nGCA_028009825.2#1#CP116283.2\t0\t3829980")) \
       -o vcfeval/haplo/"$HAPLO"
 
   rtg vcfeval \
@@ -185,7 +128,7 @@ zgrep '#CHROM' "$PATH_VCF".gz -m 1 | cut -f 10- | tr '\t' '\n' | while read HAPL
       -b "$PATH_NUCMER_VCF" \
       -c "$PATH_PGGB_WAVED_VCF" \
       -T "$THREADS" \
-      -e <(bedtools intersect -a <(bedtools merge -d $dist -i "$PATH_NUCMER_VCF" ) -b <(bedtools merge -d $dist -i "$PATH_PGGB_WAVED_VCF")) \
+      -e <(bedtools intersect -a <(bedtools merge -d $dist -i "$PATH_NUCMER_VCF") -b <(bedtools merge -d $dist -i "$PATH_PGGB_WAVED_VCF") | bedtools subtract -a stdin -b <(echo "GCA_028009825.2#1#CP116281.2\t0\t5314359\nGCA_028009825.2#1#CP116283.2\t0\t3829980")) \
       -o vcfeval/haplo.waved/"$HAPLO"
 done
 

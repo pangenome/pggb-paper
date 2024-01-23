@@ -13,10 +13,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f3fbe033-61ae-4546-88c4-a7e8ac317df9" name="Changes" comment="typo">
-      <change beforePath="$PROJECT_DIR$/scripts/graph_statistics.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/small_variants_evaluation.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pangenomes.tsv" beforeDir="false" afterPath="$PROJECT_DIR$/data/pangenomes.tsv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/workflows/0.Preparation.md" beforeDir="false" afterPath="$PROJECT_DIR$/workflows/0.Preparation.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/workflows/1.PangenomeBuilding.md" beforeDir="false" afterPath="$PROJECT_DIR$/workflows/1.PangenomeBuilding.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workflows/2.Evaluation.md" beforeDir="false" afterPath="$PROJECT_DIR$/workflows/2.Evaluation.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +36,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="2MOCuIeIEgv0zq95tw8TxqVVYIy" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -45,15 +49,18 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/guarracino/git/pggb-paper/workflows&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;review&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/guarracino/git/pggb-paper&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.LLMConfigurable&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -80,6 +87,12 @@
       <workItem from="1677723426419" duration="158000" />
       <workItem from="1677774078969" duration="733000" />
       <workItem from="1679078141082" duration="6000" />
+      <workItem from="1701575789577" duration="691000" />
+      <workItem from="1701822634922" duration="626000" />
+      <workItem from="1701884609542" duration="266000" />
+      <workItem from="1702043736058" duration="8000" />
+      <workItem from="1703260971000" duration="523000" />
+      <workItem from="1703448199055" duration="3000" />
     </task>
     <task id="LOCAL-00001" summary="add preparation and pangenomes.tsv">
       <created>1677635764884</created>
@@ -145,5 +158,9 @@
     <MESSAGE value="more tools and graph evaluation loop" />
     <MESSAGE value="typo" />
     <option name="LAST_COMMIT_MESSAGE" value="typo" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
