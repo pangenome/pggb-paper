@@ -1,4 +1,4 @@
-path.fasta.gz p s n k G POA O ref
+path.fasta.gz p s n k ref
 /lizardfs/guarracino/pggb-paper/assemblies/hsapiens/hsapiens90.chr6.masked.fa.gz 98 5000 90 23 chm13
 /lizardfs/guarracino/pggb-paper/assemblies/mmusculus/mmusculus36.chr19.fa.gz 98 5000 36 47 GCA_000001635.9
 /lizardfs/guarracino/pggb-paper/assemblies/primates/primates16.hsa6.fa.gz 95 5000 16 47 grch38
