@@ -1,44 +1,44 @@
-path.fasta.gz p s n k G POA O ref
-/lizardfs/guarracino/pggb-paper/assemblies/hsapiens/hsapiens90.chr6.masked.fa.gz 98 5000 90 23 700,900,1100 asm5 0.001 chm13
-/lizardfs/guarracino/pggb-paper/assemblies/mmusculus/mmusculus36.chr19.fa.gz 98 5000 36 47 700,900,1100 asm5 0.001 GCA_000001635.9
-/lizardfs/guarracino/pggb-paper/assemblies/primates/primates16.hsa6.fa.gz 95 5000 16 47 700,900,1100 asm5 0.001 grch38
-/lizardfs/guarracino/pggb-paper/assemblies/athaliana/athaliana82.chr1.fa.gz 95 5000 82 47 700,900,1100 asm5 0.001 GCA_028009825.2
-/lizardfs/guarracino/pggb-paper/assemblies/athaliana/athaliana82.chr2.fa.gz 95 5000 82 47 700,900,1100 asm5 0.001 GCA_028009825.2
-/lizardfs/guarracino/pggb-paper/assemblies/athaliana/athaliana82.chr3.fa.gz 95 5000 82 47 700,900,1100 asm5 0.001 GCA_028009825.2
-/lizardfs/guarracino/pggb-paper/assemblies/athaliana/athaliana82.chr4.fa.gz 95 5000 82 47 700,900,1100 asm5 0.001 GCA_028009825.2
-/lizardfs/guarracino/pggb-paper/assemblies/athaliana/athaliana82.chr5.fa.gz 95 5000 82 47 700,900,1100 asm5 0.001 GCA_028009825.2
-/lizardfs/guarracino/pggb-paper/assemblies/scerevisiae/scerevisiae142.fa.gz 95 5000 142 47 700,900,1100 asm5 0.001 SGDref
-/lizardfs/guarracino/pggb-paper/assemblies/ecoli/ecoli50.fa.gz 90 5000 50 17 700,900,1100 asm5 0.001 GCA_000597845.1
-/lizardfs/guarracino/pggb-paper/assemblies/ecoli/ecoli500.fa.gz 90 5000 500 17 700,900,1100 asm5 0.001 GCA_000597845.1
-/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr1.fa.gz 95 5000 23 17 700,900,1100 asm5 0.001 SL5
-/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr2.fa.gz 95 5000 23 17 700,900,1100 asm5 0.001 SL5
-/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr3.fa.gz 95 5000 23 17 700,900,1100 asm5 0.001 SL5
-/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr4.fa.gz 95 5000 23 17 700,900,1100 asm5 0.001 SL5
-/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr5.fa.gz 95 5000 23 17 700,900,1100 asm5 0.001 SL5
-/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr6.fa.gz 95 5000 23 17 700,900,1100 asm5 0.001 SL5
-/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr7.fa.gz 95 5000 23 17 700,900,1100 asm5 0.001 SL5
-/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr8.fa.gz 95 5000 23 17 700,900,1100 asm5 0.001 SL5
-/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr9.fa.gz 95 5000 23 17 700,900,1100 asm5 0.001 SL5
-/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr10.fa.gz 95 5000 23 17 700,900,1100 asm5 0.001 SL5
-/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr11.fa.gz 95 5000 23 17 700,900,1100 asm5 0.001 SL5
-/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr12.fa.gz 95 5000 23 17 700,900,1100 asm5 0.001 SL5
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr1.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr2.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr3.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr4.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr5.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr6.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr7.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr8.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr9.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr10.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr11.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr12.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr13.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr14.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr15.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr16.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr17.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr18.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr19.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
-/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr20.fa.gz 95 10000 37 23 700,900,1100 asm5 0.001 ZH13
+path.fasta.gz p s n k ref
+/lizardfs/guarracino/pggb-paper/assemblies/hsapiens/hsapiens90.chr6.masked.fa.gz 98 5000 90 23 chm13
+/lizardfs/guarracino/pggb-paper/assemblies/mmusculus/mmusculus36.chr19.fa.gz 98 5000 36 47 GCA_000001635.9
+/lizardfs/guarracino/pggb-paper/assemblies/primates/primates16.hsa6.fa.gz 95 5000 16 47 grch38
+/lizardfs/guarracino/pggb-paper/assemblies/athaliana/athaliana82.chr1.fa.gz 95 5000 82 47 GCA_028009825.2
+/lizardfs/guarracino/pggb-paper/assemblies/athaliana/athaliana82.chr2.fa.gz 95 5000 82 47 GCA_028009825.2
+/lizardfs/guarracino/pggb-paper/assemblies/athaliana/athaliana82.chr3.fa.gz 95 5000 82 47 GCA_028009825.2
+/lizardfs/guarracino/pggb-paper/assemblies/athaliana/athaliana82.chr4.fa.gz 95 5000 82 47 GCA_028009825.2
+/lizardfs/guarracino/pggb-paper/assemblies/athaliana/athaliana82.chr5.fa.gz 95 5000 82 47 GCA_028009825.2
+/lizardfs/guarracino/pggb-paper/assemblies/scerevisiae/scerevisiae142.fa.gz 95 5000 142 47 SGDref
+/lizardfs/guarracino/pggb-paper/assemblies/ecoli/ecoli50.fa.gz 90 5000 50 17 GCA_000597845.1
+/lizardfs/guarracino/pggb-paper/assemblies/ecoli/ecoli500.fa.gz 90 5000 500 17 GCA_000597845.1
+/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr1.fa.gz 95 5000 23 17 SL5
+/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr2.fa.gz 95 5000 23 17 SL5
+/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr3.fa.gz 95 5000 23 17 SL5
+/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr4.fa.gz 95 5000 23 17 SL5
+/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr5.fa.gz 95 5000 23 17 SL5
+/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr6.fa.gz 95 5000 23 17 SL5
+/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr7.fa.gz 95 5000 23 17 SL5
+/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr8.fa.gz 95 5000 23 17 SL5
+/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr9.fa.gz 95 5000 23 17 SL5
+/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr10.fa.gz 95 5000 23 17 SL5
+/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr11.fa.gz 95 5000 23 17 SL5
+/lizardfs/guarracino/pggb-paper/assemblies/tomato/tomato23.chr12.fa.gz 95 5000 23 17 SL5
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr1.fa.gz 95 10000 37 23 ZH13
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr2.fa.gz 95 10000 37 23 ZH13
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr3.fa.gz 95 10000 37 23 ZH13
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr4.fa.gz 95 10000 37 23 ZH13
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr5.fa.gz 95 10000 37 23 ZH13
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr6.fa.gz 95 10000 37 23 ZH13
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr7.fa.gz 95 10000 37 23 ZH13
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr8.fa.gz 95 10000 37 23 ZH13
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr9.fa.gz 95 10000 37 23 ZH13
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr10.fa.gz 95 10000 37 23 ZH13
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr11.fa.gz 95 10000 37 23 ZH13
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr12.fa.gz 95 10000 37 23 ZH13
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr13.fa.gz 95 10000 37 23 ZH13
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr14.fa.gz 95 10000 37 23 ZH13
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr15.fa.gz 95 10000 37 23 ZH13
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr16.fa.gz 95 10000 37 23 ZH13
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr17.fa.gz 95 10000 37 23 ZH13
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr18.fa.gz 95 10000 37 23 ZH13
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr19.fa.gz 95 10000 37 23 ZH13
+/lizardfs/guarracino/pggb-paper/assemblies/soy/soy37.chr20.fa.gz 95 10000 37 23 ZH13
